@@ -10,6 +10,32 @@ let bonus; // nødvendig?
 let etPar, toPar, treEns, fireEns, lilleStraight, storeStraight, fuldtHus, chance, Yatzy;
 let total; // nødvendig?
 
+let info = {
+    "counter" : 3,
+    "dices" : []
+}
+
+let result = {
+    "etere" : upperSectionScore(1),
+    "toere" : upperSectionScore(2),
+    "trere" : upperSectionScore(3),
+    "firere" : upperSectionScore(4),
+    "femere" : upperSectionScore(5),
+    "seksere" : upperSectionScore(6),
+    //"sum" : sumScore(),
+    //"bonus" : bonusScore(),
+    "etPar" : onePairScore(),
+    "toPar" : twoPairScore(),
+    "treEns" : threeOfAKindScore(),
+    "fireEns" : fourOfAKindScore(),
+    "lilleStraight" : smallStraightScore(),
+    "storeStraight" : largeStraightScore(),
+    "fuldtHus" : fullHouseScore(),
+    "chance" : chanceScore(),
+    "yatzy" : yatzyScore(),
+    //"total" : totalScore()
+}
+
 function decreaseCounter() {
     counter--
 }
@@ -42,6 +68,11 @@ function sumScore(sectionScores) {
     }
     return sum;
 }
+/*function sumScore() {
+    let sum = result.etere + result.toere + result.trere + result.firere + result.femere + result.seksere;
+    
+    return sum;
+}*/
 
 function bonusScore(lockedUpperSectionScores) {
     if (sumScore(lockedUpperSectionScores) >= 63) {
@@ -49,6 +80,12 @@ function bonusScore(lockedUpperSectionScores) {
     }
     else return 0;
 }
+/*function bonusScore() {
+    if (sumScore() >= 63) {
+        return 50;
+    }
+    else return 0;
+}*/
 
 // Starter med højeste tal (6). Hvis hvis der findes flere terninger, vælges den. 
 function onePairScore() {
@@ -132,5 +169,8 @@ function yatzyScore() {
 function totalScore(lockedUpperSectionScores, lockedLowerSectionScores) {
     return sumScore(lockedUpperSectionScores) + bonusScore(lockedUpperSectionScores) + sumScore(lockedLowerSectionScores);
 }
+/*function totalScore() {
+    return result.sum + result.bonusScore + result.etPar + result.toPar + result.treEns + result.fireEns + result.fuldtHus + result.lilleStraight  +result.storeStraight + result.chance + result.yatzy;
+} */
 
 export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter}
