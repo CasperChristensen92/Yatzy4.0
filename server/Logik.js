@@ -173,4 +173,16 @@ function totalScore(lockedUpperSectionScores, lockedLowerSectionScores) {
     return result.sum + result.bonusScore + result.etPar + result.toPar + result.treEns + result.fireEns + result.fuldtHus + result.lilleStraight  +result.storeStraight + result.chance + result.yatzy;
 } */
 
-export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter}
+export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter,rollDice}
+
+function rollDice(lockedDice) {
+    if (counter > 0) {
+        for (let i = 0; i < 5; i++) {
+            if (!lockedDice[i]) {
+                let slag = Math.floor(Math.random() * 6) + 1;
+                dices[i] = slag;
+            }
+        }
+    decreaseCounter()
+    }
+}

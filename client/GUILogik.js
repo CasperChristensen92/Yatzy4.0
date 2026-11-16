@@ -32,20 +32,40 @@ let variableArray = [et, to, tre, fire, fem, seks, etPar, toPair, treEns, fireEn
 let nytSpil = document.querySelector('#nytSpilKnap')
 let nyRunde = document.querySelector('#nyRundeKnap')
 
-slåKnap.addEventListener("click", function () {
-    if (counter > 0) {
-        for (let i = 0; i < terninger.length; i++) {
-            if (!checkbox[i].checked) {
-                let slag = Math.floor(Math.random() * 6) + 1
-                terninger[i].src = "images/dice" + slag + ".png"
-                dices[i] = slag
-            }
+
+async function post(url, objekt) {
+    const respons = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(objekt),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if (respons.status !== 201) // Created
+        throw new Error(respons.status);
+    return await respons.json();
+}
+
+slåKnap.addEventListener("click", async function () {
+    try {
+        let lockedDice = [] // laver liste med de terninger der er låst, så de ikke bliver rullet igen
+        for (let i = 0; i < checkbox.length; i++) { // checker hvilke terninger der er låst
+            lockedDice.push(checkbox[i].checked) // true hvis terningen er låst, false hvis den ikke er låst
         }
-        decreaseCounter()
-        opdaterValues()
+
+        let result = await post("http://localhost:8080/rollDice", lockedDice) // sender listen til serveren, som ruller de terninger der ikke er låst;
+        slagTilbage.innerHTML = "Slag tilbage: " + result.newCounter // opdaterer counteren på klienten
+        for (let i = 0; i < terninger.length; i++) { // opdaterer billederne på klienten
+            terninger[i].src = "images/dice" + result.newDices[i] + ".png"
         }
-        slagTilbage.innerHTML = "Slag tilbage: " + counter
-})
+
+        //decreaseCounter() // skal nok flyttes til serveren, men for nu er det her
+        opdaterValues() // skal nok flyttes til serveren, men for nu er det her
+    } catch (error) {
+        console.error("Fejl ved rulning af terninger:", error);
+    }
+});
+
+
+
 
 function opdaterValues() {
     et.value = upperSectionScore(1)
@@ -78,7 +98,7 @@ for (let v of variableArray) {
     })
 }
 
-nyRunde.addEventListener("click", function () {
+nyRunde.addEventListener("click", async function () {
     for (let v of variableArray) {
         if (!v.disabled) {
             v.value = ""
@@ -90,7 +110,13 @@ nyRunde.addEventListener("click", function () {
     for (let cb of checkbox) {
         cb.checked = false
     }
-    resetCounter()
+    
+    try {
+        await post("http://localhost:8080/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
+            slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
+        } catch (error) {
+            console.error("Fejl ved nulstilling af runde:", error);
+        }
 })
 
 nytSpil.addEventListener("click", function() {
