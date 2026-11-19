@@ -2,7 +2,7 @@ let counter = 3 //tæller til at sørge for der kun er 3 slag i alt, opdateres e
 const dices = []
 
 // øvre sektion
-let etere , toere, treere, firere, femere;
+let etere , toere, treere, firere, femere, seksere;
 let sum; // nødvendig?
 let bonus; // nødvendig?
 
@@ -18,12 +18,12 @@ let info = {
 let result = {
     "etere" : upperSectionScore(1),
     "toere" : upperSectionScore(2),
-    "trere" : upperSectionScore(3),
+    "treere" : upperSectionScore(3),
     "firere" : upperSectionScore(4),
     "femere" : upperSectionScore(5),
     "seksere" : upperSectionScore(6),
-    //"sum" : sumScore(),
-    //"bonus" : bonusScore(),
+    "sum" : sumScore(),
+    "bonus" : bonusScore(),
     "etPar" : onePairScore(),
     "toPar" : twoPairScore(),
     "treEns" : threeOfAKindScore(),
@@ -32,8 +32,8 @@ let result = {
     "storeStraight" : largeStraightScore(),
     "fuldtHus" : fullHouseScore(),
     "chance" : chanceScore(),
-    "yatzy" : yatzyScore(),
-    //"total" : totalScore()
+    "Yatzy" : yatzyScore(),
+    "total" : totalScore()
 }
 
 function decreaseCounter() {
