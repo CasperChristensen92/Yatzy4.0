@@ -25,7 +25,7 @@ result.lilleStraight = document.querySelector('#lilleStraight')
 result.storeStraight = document.querySelector('#storStraight')
 result.fuldtHus = document.querySelector('#fuldtHus')
 result.chance = document.querySelector('#chancen')
-result.Yatzy = document.querySelector('#yatzy')
+result.yatzy = document.querySelector('#yatzy')
 result.total = document.querySelector('#total')
 
 let variableArray = [et, to, tre, fire, fem, seks, etPar, toPair, treEns, fireEns, lilleStraight, storStraight, fuldtHus, chance, yatzy]
