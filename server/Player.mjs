@@ -1,9 +1,3 @@
-let player = {
-    "name" : null,
-    "Highscore" : 0,
-    "result" : result,
-}
-
 let result = {
     "etere" : {"value" :0, "locked" : false },
     "toere" : {"value" :0, "locked" : false },
@@ -23,6 +17,12 @@ let result = {
     "chance" : {"value" :0, "locked" : false },
     "yatzy" : {"value" :0, "locked" : false },
     "total" : {"value" :0, "locked" : false }
+}
+
+let player = {
+    "name" : null,
+    "Highscore" : 0,
+    "result" : result,
 }
 
 export {result}

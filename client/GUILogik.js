@@ -1,7 +1,7 @@
 import { dices, upperSectionScore, 
     sumScore, bonusScore, 
     onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, fullHouseScore, smallStraightScore, largeStraightScore, chanceScore, yatzyScore, decreaseCounter, counter, 
-    totalScore, resetCounter, result
+    totalScore, resetCounter
 } from "../server/Logik.js"
 
 let slåKnap = document.querySelector('#terningerKnap')
@@ -9,26 +9,52 @@ let terninger = document.querySelectorAll('.terning')
 let checkbox = document.querySelectorAll('.cb')
 let slagTilbage = document.querySelector('#counter')
 
-result.etere = document.querySelector('#et')
-result.toere = document.querySelector('#to')
-result.treere = document.querySelector('#tre')
-result.firere = document.querySelector('#fire')
-result.femere = document.querySelector('#fem')
-result.seksere = document.querySelector('#seks')
-result.sum = document.querySelector('#sum')
-result.bonus = document.querySelector('#bonus')
-result.etPar = document.querySelector('#etPar')
-result.toPar = document.querySelector('#toPar')
-result.treEns = document.querySelector('#treEns')
-result.fireEns = document.querySelector('#fireEns')
-result.lilleStraight = document.querySelector('#lilleStraight')
-result.storeStraight = document.querySelector('#storStraight')
-result.fuldtHus = document.querySelector('#fuldtHus')
-result.chance = document.querySelector('#chancen')
-result.yatzy = document.querySelector('#yatzy')
-result.total = document.querySelector('#total')
+// result.etere = document.querySelector('#et')
+// result.toere = document.querySelector('#to')
+// result.treere = document.querySelector('#tre')
+// result.firere = document.querySelector('#fire')
+// result.femere = document.querySelector('#fem')
+// result.seksere = document.querySelector('#seks')
+// result.sum = document.querySelector('#sum')
+// result.bonus = document.querySelector('#bonus')
+// result.etPar = document.querySelector('#etPar')
+// result.toPar = document.querySelector('#toPar')
+// result.treEns = document.querySelector('#treEns')
+// result.fireEns = document.querySelector('#fireEns')
+// result.lilleStraight = document.querySelector('#lilleStraight')
+// result.storeStraight = document.querySelector('#storStraight')
+// result.fuldtHus = document.querySelector('#fuldtHus')
+// result.chance = document.querySelector('#chancen')
+// result.yatzy = document.querySelector('#yatzy')
+// result.total = document.querySelector('#total')
 let nytSpil = document.querySelector('#nytSpilKnap')
 let nyRunde = document.querySelector('#nyRundeKnap')
+
+
+async function getResult() {
+    const response = await fetch('http://localhost:8080/result')
+    return await response.json();
+}
+let result = await getResult();
+
+document.querySelector('#et').value = result.etere.value
+document.querySelector('#to').value = result.toere.value
+document.querySelector('#tre').value = result.treere.value
+document.querySelector('#fire').value = result.firere.value
+document.querySelector('#fem').value = result.femere.value
+document.querySelector('#seks').value = result.seksere.value
+document.querySelector('#sum').value = result.sum.value
+document.querySelector('#bonus').value = result.bonus.value
+document.querySelector('#etPar').value = result.etPar.value
+document.querySelector('#toPar').value = result.toPar.value
+document.querySelector('#treEns').value = result.treEns.value
+document.querySelector('#fireEns').value = result.fireEns.value
+document.querySelector('#lilleStraight').value = result.lilleStraight.value
+document.querySelector('#storStraight').value = result.storeStraight.value
+document.querySelector('#fuldtHus').value = result.fuldtHus.value
+document.querySelector('#chancen').value = result.chance.value
+document.querySelector('#yatzy').value = result.yatzy.value
+document.querySelector('#total').value = result.total.value
 
 
 async function post(url, objekt) {
