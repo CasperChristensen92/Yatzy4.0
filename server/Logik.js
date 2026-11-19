@@ -16,24 +16,24 @@ let info = {
 }
 
 let result = {
-    "etere" : upperSectionScore(1),
-    "toere" : upperSectionScore(2),
-    "treere" : upperSectionScore(3),
-    "firere" : upperSectionScore(4),
-    "femere" : upperSectionScore(5),
-    "seksere" : upperSectionScore(6),
-    "sum" : sumScore(),
-    "bonus" : bonusScore(),
-    "etPar" : onePairScore(),
-    "toPar" : twoPairScore(),
-    "treEns" : threeOfAKindScore(),
-    "fireEns" : fourOfAKindScore(),
-    "lilleStraight" : smallStraightScore(),
-    "storeStraight" : largeStraightScore(),
-    "fuldtHus" : fullHouseScore(),
-    "chance" : chanceScore(),
-    "Yatzy" : yatzyScore(),
-    "total" : totalScore()
+    etere,
+    toere,
+    treere,
+    firere,
+    femere,
+    seksere,
+    sum,
+    bonus,
+    etPar,
+    toPar,
+    treEns,
+    fireEns,
+    lilleStraight,
+    storeStraight,
+    fuldtHus,
+    chance,
+    Yatzy,
+    total
 }
 
 function decreaseCounter() {

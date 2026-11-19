@@ -92,9 +92,9 @@ function opdaterValues() {
     total.value = totalScore(selectedUpperScores, selectedLowerScores)
 }
 
-for (let v of variableArray) {
-    v.addEventListener("click", function () {
-        v.disabled = true
+for (let r of result) {
+    r.addEventListener("click", function () {
+        r.disabled = true
     })
 }
 
