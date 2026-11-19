@@ -1,10 +1,15 @@
-import express from 'express';
+import express, { response } from 'express';
 import cors from 'cors';
 import { rollDice, dices, counter, resetCounter } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
+import { result } from './Player.mjs'
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.get('/result', async(request, response) => {
+    response.json(result)
+})
 
 app.post('/rollDice', (request,response) =>{
     let lockedDice = request.body; // modtager listen med de låste terninger fra klienten
