@@ -119,7 +119,7 @@ nyRunde.addEventListener("click", async function () {
         }
 })
 
-nytSpil.addEventListener("click", function() {
+nytSpil.addEventListener("click", async function() {
     for (let v of variableArray) {
         v.disabled = false
         v.value = ""
@@ -130,6 +130,11 @@ nytSpil.addEventListener("click", function() {
         for (let t of terninger) {
         t.src = "images/dice1.png"
     }
-    resetCounter()
 
+    try {
+        await post("http://localhost:8080/newGame", {}) // sender en anmodning til serveren om at starte et nyt spil
+        slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
+    } catch (error) {
+        console.error("Fejl ved nulstilling af spil:", error);
+    }
 })
