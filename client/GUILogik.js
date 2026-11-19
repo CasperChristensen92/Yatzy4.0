@@ -67,30 +67,7 @@ slåKnap.addEventListener("click", async function () {
 
 
 
-function opdaterValues() {
-    et.value = upperSectionScore(1)
-    to.value = upperSectionScore(2)
-    tre.value = upperSectionScore(3)
-    fire.value = upperSectionScore(4)
-    fem.value = upperSectionScore(5)
-    seks.value = upperSectionScore(6)
-    
-    etPar.value = onePairScore()
-    toPair.value = twoPairScore()
-    treEns.value = threeOfAKindScore()
-    fireEns.value = fourOfAKindScore()
-    lilleStraight.value = smallStraightScore()
-    storStraight.value = largeStraightScore()
-    fuldtHus.value = fullHouseScore()
-    chance.value = chanceScore()
-    yatzy.value = yatzyScore()
-    let selectedUpperScores = [et, to, tre, fire, fem, seks].filter(v => v.disabled).map(v => parseInt(v.value))
-    let selectedLowerScores = [etPar, toPair, treEns, fireEns, lilleStraight, storStraight, fuldtHus, chance, yatzy].filter(v => v.disabled).map(v => parseInt(v.value))
 
-    sum.value = sumScore(selectedUpperScores)
-    bonus.value = bonusScore(selectedUpperScores)
-    total.value = totalScore(selectedUpperScores, selectedLowerScores)
-}
 
 for (let r of result) {
     r.addEventListener("click", function () {

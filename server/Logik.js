@@ -36,6 +36,31 @@ let result = {
     total
 }
 
+function opdaterValues() {
+    result.etere = upperSectionScore(1)
+    result.toere = upperSectionScore(2)
+    result.treere = upperSectionScore(3)
+    result.firere = upperSectionScore(4)
+    result.femere = upperSectionScore(5)
+    result.seksere = upperSectionScore(6)
+    
+    result.etPar = onePairScore()
+    result.toPar = twoPairScore()
+    result.treEns = threeOfAKindScore()
+    result.fireEns = fourOfAKindScore()
+    result.lilleStraight = smallStraightScore()
+    result.storeStraight = largeStraightScore()
+    result.fuldtHus = fullHouseScore()
+    result.chance = chanceScore()
+    result.yatzy = yatzyScore()
+    let selectedUpperScores = [et, to, tre, fire, fem, seks].filter(v => v.disabled).map(v => parseInt(v.value))
+    let selectedLowerScores = [etPar, toPair, treEns, fireEns, lilleStraight, storStraight, fuldtHus, chance, yatzy].filter(v => v.disabled).map(v => parseInt(v.value))
+
+    sum.value = sumScore(selectedUpperScores)
+    bonus.value = bonusScore(selectedUpperScores)
+    total.value = totalScore(selectedUpperScores, selectedLowerScores)
+}
+
 function decreaseCounter() {
     counter--
 }
@@ -173,7 +198,7 @@ function totalScore(lockedUpperSectionScores, lockedLowerSectionScores) {
     return result.sum + result.bonusScore + result.etPar + result.toPar + result.treEns + result.fireEns + result.fuldtHus + result.lilleStraight  +result.storeStraight + result.chance + result.yatzy;
 } */
 
-export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter,rollDice}
+export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter,rollDice, result}
 
 function rollDice(lockedDice) {
     if (counter > 0) {
