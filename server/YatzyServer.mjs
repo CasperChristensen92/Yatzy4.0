@@ -23,4 +23,12 @@ app.post('/newRound', (request, response) => {
     });
 });
 
+app.post('/newGame', (request, response) => {
+    resetCounter(); // Reset counteren til 3 for en ny runde
+    dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
+    response.status(201).json({ 
+        message: "Nyt spil startet på serveren"
+    });
+});
+
 app.listen(8080, () => console.log('Lytter på port 8080 ...'));
