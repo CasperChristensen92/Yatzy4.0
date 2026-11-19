@@ -55,6 +55,7 @@ document.querySelector('#fuldtHus').value = result.fuldtHus.value
 document.querySelector('#chancen').value = result.chance.value
 document.querySelector('#yatzy').value = result.yatzy.value
 document.querySelector('#total').value = result.total.value
+// Dummy linje
 
 
 async function post(url, objekt) {
