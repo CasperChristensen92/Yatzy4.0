@@ -2,13 +2,13 @@ let counter = 3 //tæller til at sørge for der kun er 3 slag i alt, opdateres e
 const dices = []
 
 // øvre sektion
-// let etere , toere, treere, firere, femere, seksere;
-// let sum; // nødvendig?
-// let bonus; // nødvendig?
+let etere , toere, treere, firere, femere, seksere;
+let sum; // nødvendig?
+let bonus; // nødvendig?
 
 // nedre sektion
-// let etPar, toPar, treEns, fireEns, lilleStraight, storeStraight, fuldtHus, chance, Yatzy;
-// let total; // nødvendig?
+let etPar, toPar, treEns, fireEns, lilleStraight, storeStraight, fuldtHus, chance, Yatzy;
+let total; // nødvendig?
 
 let info = {
     "counter" : 3,
@@ -25,14 +25,14 @@ let result = {
     sum,
     bonus,
     etPar,
-    toPar,
+    toPar = 0,
     treEns,
     fireEns,
     lilleStraight,
     storeStraight,
     fuldtHus,
     chance,
-    yatzy,
+    Yatzy,
     total
 }
 
@@ -53,8 +53,8 @@ function opdaterValues() {
     result.fuldtHus = fullHouseScore()
     result.chance = chanceScore()
     result.yatzy = yatzyScore()
-    let selectedUpperScores = [etere, toere, treere, firere, femere, seksere].filter(v => v.disabled).map(v => parseInt(v.value))
-    let selectedLowerScores = [etPar, toPar, treEns, fireEns, lilleStraight, storeStraight, fuldtHus, chance, yatzy].filter(v => v.disabled).map(v => parseInt(v.value))
+    let selectedUpperScores = [et, to, tre, fire, fem, seks].filter(v => v.disabled).map(v => parseInt(v.value))
+    let selectedLowerScores = [etPar, toPair, treEns, fireEns, lilleStraight, storStraight, fuldtHus, chance, yatzy].filter(v => v.disabled).map(v => parseInt(v.value))
 
     sum.value = sumScore(selectedUpperScores)
     bonus.value = bonusScore(selectedUpperScores)
