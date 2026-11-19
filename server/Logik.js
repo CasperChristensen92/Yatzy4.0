@@ -25,7 +25,7 @@ let result = {
     sum,
     bonus,
     etPar,
-    toPar = 0,
+    toPar,
     treEns,
     fireEns,
     lilleStraight,
