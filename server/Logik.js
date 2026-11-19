@@ -15,27 +15,6 @@ let info = {
     "dices" : []
 }
 
-let result = {
-    etere,
-    toere,
-    treere,
-    firere,
-    femere,
-    seksere,
-    sum,
-    bonus,
-    etPar,
-    toPar,
-    treEns,
-    fireEns,
-    lilleStraight,
-    storeStraight,
-    fuldtHus,
-    chance,
-    Yatzy,
-    total
-}
-
 function opdaterValues() {
     result.etere = upperSectionScore(1)
     result.toere = upperSectionScore(2)
@@ -53,8 +32,8 @@ function opdaterValues() {
     result.fuldtHus = fullHouseScore()
     result.chance = chanceScore()
     result.yatzy = yatzyScore()
-    let selectedUpperScores = [et, to, tre, fire, fem, seks].filter(v => v.disabled).map(v => parseInt(v.value))
-    let selectedLowerScores = [etPar, toPair, treEns, fireEns, lilleStraight, storStraight, fuldtHus, chance, yatzy].filter(v => v.disabled).map(v => parseInt(v.value))
+    let selectedUpperScores = [result.etere, result.toere, result.treere, result.firere, result.femere, result.seksere].filter(v => v.disabled).map(v => parseInt(v.value))
+    let selectedLowerScores = [result.etPar, result.toPar, result.treEns, result.fireEns, result.lilleStraight, result.storeStraight, result.fuldtHus, result.chance, result.yatzy].filter(v => v.disabled).map(v => parseInt(v.value))
 
     sum.value = sumScore(selectedUpperScores)
     bonus.value = bonusScore(selectedUpperScores)

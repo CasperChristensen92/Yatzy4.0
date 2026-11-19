@@ -27,8 +27,6 @@ result.fuldtHus = document.querySelector('#fuldtHus')
 result.chance = document.querySelector('#chancen')
 result.yatzy = document.querySelector('#yatzy')
 result.total = document.querySelector('#total')
-
-let variableArray = [et, to, tre, fire, fem, seks, etPar, toPair, treEns, fireEns, lilleStraight, storStraight, fuldtHus, chance, yatzy]
 let nytSpil = document.querySelector('#nytSpilKnap')
 let nyRunde = document.querySelector('#nyRundeKnap')
 
@@ -76,11 +74,11 @@ for (let r of result) {
 }
 
 nyRunde.addEventListener("click", async function () {
-    for (let v of variableArray) {
+    /*for (let v of variableArray) {
         if (!v.disabled) {
             v.value = ""
         }
-    }
+    }*/
     for (let t of terninger) {
         t.src = "images/dice1.png"
     }
