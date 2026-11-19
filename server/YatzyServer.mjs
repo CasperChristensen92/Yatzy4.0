@@ -28,6 +28,7 @@ app.set('view engine', 'pug');
 app.set('views', path.join(projectRoot, 'views'));
 
 
+// Bruges til at huske, hvilken spiller der bruger hjemmesiden, så serveren genkender spilleren på tværs af HTTP-requests.
 app.use(session({
     secret: 'hemmelig',
     resave: false,
@@ -35,16 +36,21 @@ app.use(session({
 }));
 
 
-const players = new Map();
 
+const players = new Map(); // spillere gemmes med session-ID og navn som key og value
+
+
+// Når en bruger besøger forsiden. Forsiden er skrevet i .pug, så den skal renders til html
 app.get('/', (request, response) => {
     response.render('forside', {
-        players: [...players.values()],
-        currentPlayer: request.session.playerName
+        players: [...players.values()], // Pug får listen af spillere
+        currentPlayer: request.session.playerName // Henter navn på aktuel spiller, fra spillerens session, hvis den allerede findes
     });
 
 });
 
+
+// Modtager spillerens navn fra forsiden. Navnet gemmes i sessionen og tilføjes til listen
 app.post('/join', (request, response) => {
     const name = String(request.body.name ?? '').trim();
 
@@ -59,7 +65,7 @@ app.post('/join', (request, response) => {
         if (err) {
             return response.status(500).send('Sessionen kunne ikke gemmes')
         }
-        response.redirect('/game');
+        response.redirect('/game'); // Spilleren sendes videre til spil-siden
     });
 
 });
