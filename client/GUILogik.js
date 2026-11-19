@@ -1,32 +1,32 @@
 import { dices, upperSectionScore, 
     sumScore, bonusScore, 
     onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, fullHouseScore, smallStraightScore, largeStraightScore, chanceScore, yatzyScore, decreaseCounter, counter, 
-    totalScore, resetCounter
+    totalScore, resetCounter, result
 } from "../server/Logik.js"
+
 let slåKnap = document.querySelector('#terningerKnap')
 let terninger = document.querySelectorAll('.terning')
 let checkbox = document.querySelectorAll('.cb')
 let slagTilbage = document.querySelector('#counter')
 
-let et = document.querySelector('#et')
-let to = document.querySelector('#to')
-let tre = document.querySelector('#tre')
-let fire = document.querySelector('#fire')
-let fem = document.querySelector('#fem')
-let seks = document.querySelector('#seks')
-let sum = document.querySelector('#sum')
-let bonus = document.querySelector('#bonus')
-
-let etPar = document.querySelector('#etPar')
-let toPair = document.querySelector('#toPar')
-let treEns = document.querySelector('#treEns')
-let fireEns = document.querySelector('#fireEns')
-let lilleStraight = document.querySelector('#lilleStraight')
-let storStraight = document.querySelector('#storStraight')
-let fuldtHus = document.querySelector('#fuldtHus')
-let chance = document.querySelector('#chancen')
-let yatzy = document.querySelector('#yatzy')
-let total = document.querySelector('#total')
+result.etere = document.querySelector('#et')
+result.toere = document.querySelector('#to')
+result.treere = document.querySelector('#tre')
+result.firere = document.querySelector('#fire')
+result.femere = document.querySelector('#fem')
+result.seksere = document.querySelector('#seks')
+result.sum = document.querySelector('#sum')
+result.bonus = document.querySelector('#bonus')
+result.etPar = document.querySelector('#etPar')
+result.toPar = document.querySelector('#toPar')
+result.treEns = document.querySelector('#treEns')
+result.fireEns = document.querySelector('#fireEns')
+result.lilleStraight = document.querySelector('#lilleStraight')
+result.storeStraight = document.querySelector('#storStraight')
+result.fuldtHus = document.querySelector('#fuldtHus')
+result.chance = document.querySelector('#chancen')
+result.Yatzy = document.querySelector('#yatzy')
+result.total = document.querySelector('#total')
 
 let variableArray = [et, to, tre, fire, fem, seks, etPar, toPair, treEns, fireEns, lilleStraight, storStraight, fuldtHus, chance, yatzy]
 let nytSpil = document.querySelector('#nytSpilKnap')
@@ -92,9 +92,9 @@ function opdaterValues() {
     total.value = totalScore(selectedUpperScores, selectedLowerScores)
 }
 
-for (let v of variableArray) {
-    v.addEventListener("click", function () {
-        v.disabled = true
+for (let r of result) {
+    r.addEventListener("click", function () {
+        r.disabled = true
     })
 }
 
