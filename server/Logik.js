@@ -2,13 +2,13 @@ let counter = 3 //tæller til at sørge for der kun er 3 slag i alt, opdateres e
 const dices = []
 
 // øvre sektion
-// let etere , toere, treere, firere, femere, seksere;
-// let sum; // nødvendig?
-// let bonus; // nødvendig?
+let etere , toere, treere, firere, femere, seksere;
+let sum; // nødvendig?
+let bonus; // nødvendig?
 
 // nedre sektion
-// let etPar, toPar, treEns, fireEns, lilleStraight, storeStraight, fuldtHus, chance, Yatzy;
-// let total; // nødvendig?
+let etPar, toPar, treEns, fireEns, lilleStraight, storeStraight, fuldtHus, chance, Yatzy;
+let total; // nødvendig?
 
 let info = {
     "counter" : 3,
