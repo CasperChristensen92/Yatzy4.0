@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/YatzyServer.mjs",
+    "dev": "nodemon -e js,mjs,json,pug server/YatzyServer.mjs"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,11 @@
   "homepage": "https://github.com/CasperChristensen92/Yatzy4.0#readme",
   "dependencies": {
     "cors": "^2.8.6",
-    "express": "^5.3.0"
+    "express": "^5.3.0",
+    "express-session": "^1.19.0",
+    "pug": "^3.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
