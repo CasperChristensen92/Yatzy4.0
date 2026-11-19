@@ -8,16 +8,36 @@ html(lang="da")
 
     body 
         main.forside
-            h1 Velkomment il Yatzy-spillet! 
-            p Spil Yatzy og se de andre spillere 
+            h1 Velkommen til Yatzy-spillet! 
+            p Spil Yatzy og se de andre tilmeldte spillere.
             
             h2 Tilmeld dig spillet
 
+            if currentPlayer
+                p Du er tilmeldt som #{currentPlayer}
+                a(href="/game") Fortsæt til spillet
+            else
+                form(action="/join", method="POST")
+                    label(for="name") Indtast spillernavn: 
+                    input#name(
+                        type="text"
+                        name="name"
+                        maxLength="30"
+                        required
+                    )
+            button(type="submit") Start spil
 
 
             h2 Tilmeldte spillere:
 
-            
+            if players.length > 0
+                ul
+                    each player in players
+                        li= player
+
+            else
+                p Der er ingen spillere endnu
+
 
 
             
