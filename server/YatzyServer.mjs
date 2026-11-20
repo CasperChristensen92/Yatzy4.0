@@ -89,6 +89,7 @@ app.post('/rollDice', (request,response) =>{
     response.status(201).json({ 
         newDices: dices,
         newCounter: counter,
+        result: result
     });
     
 });
