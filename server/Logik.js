@@ -15,23 +15,30 @@ let info = {
     "dices" : []
 }
 
+let scoreMethods = {
+    etere: () => upperSectionScore(1),
+    toere: () => upperSectionScore(2),
+    treere: () => upperSectionScore(3),
+    firere: () => upperSectionScore(4),
+    femere: () => upperSectionScore(5),
+    seksere: () => upperSectionScore(6),
+    etPar: onePairScore,
+    toPar: twoPairScore,
+    treEns: threeOfAKindScore,
+    fireEns: fourOfAKindScore,
+    lilleStraight: smallStraightScore,
+    storeStraight: largeStraightScore,
+    fuldtHus: fullHouseScore,
+    chance: chanceScore,
+    yatzy: yatzyScore
+}
+
 function opdaterValues() {
-    result.etere.value = upperSectionScore(1)
-    result.toere.value = upperSectionScore(2)
-    result.treere.value = upperSectionScore(3)
-    result.firere.value = upperSectionScore(4)
-    result.femere.value = upperSectionScore(5)
-    result.seksere.value = upperSectionScore(6)
-    
-    result.etPar.value = onePairScore()
-    result.toPar.value = twoPairScore()
-    result.treEns.value = threeOfAKindScore()
-    result.fireEns.value = fourOfAKindScore()
-    result.lilleStraight.value = smallStraightScore()
-    result.storeStraight.value = largeStraightScore()
-    result.fuldtHus.value = fullHouseScore()
-    result.chance.value = chanceScore()
-    result.yatzy.value = yatzyScore()
+    for (let felt of Object.keys(scoreMethods)) {
+        if (!result[felt].locked) {
+            result[felt].value = scoreMethods[felt]()
+        }
+    }
     let selectedUpperScores = [result.etere, result.toere, result.treere, result.firere, result.femere, result.seksere].filter(v => v.locked==true).map(v => parseInt(v.value))
     let selectedLowerScores = [result.etPar, result.toPar, result.treEns, result.fireEns, result.lilleStraight, result.storeStraight, result.fuldtHus, result.chance, result.yatzy].filter(v => v.locked==true).map(v => parseInt(v.value))
 
