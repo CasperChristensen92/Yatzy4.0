@@ -57,6 +57,7 @@ document.querySelector('#yatzy').value = result.yatzy.value
 document.querySelector('#total').value = result.total.value
 
 
+
 async function post(url, objekt) {
     const respons = await fetch(url, {
         method: "POST",
