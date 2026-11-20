@@ -4,7 +4,7 @@ html(lang="da")
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Yatzy - Forside
-        link(rel="stylesheet", href="/Styles.css")
+        link(rel="stylesheet", href="/forside.css")
 
     body 
         main.forside
@@ -19,13 +19,8 @@ html(lang="da")
             else
                 form(action="/join", method="POST")
                     label(for="name") Indtast spillernavn: 
-                    input#name(
-                        type="text"
-                        name="name"
-                        maxLength="30"
-                        required
-                    )
-            button(type="submit") Start spil
+                    input#name(type="text", name="name", maxLength="30", required)
+                    button(type="submit") Start spil
 
 
             h2 Tilmeldte spillere:
