@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express, { request, response } from 'express';
 import cors from 'cors';
 import pug from 'pug';
 import session from 'express-session'
@@ -90,6 +90,7 @@ app.post('/rollDice', (request,response) =>{
         newDices: dices,
         newCounter: counter,
     });
+    
 });
 
 app.post('/newRound', (request, response) => {
@@ -106,6 +107,13 @@ app.post('/newGame', (request, response) => {
     response.status(201).json({ 
         message: "Nyt spil startet på serveren"
     });
+});
+
+app.put('/result/:felt', async (request, response) => {
+    let felt = request.params.felt
+    let body = request.body
+    result[felt].locked = body.låst; //.låst tilgår værdien i body der hedder låst, altså true
+    response.json(result)
 });
 
 app.listen(8080, () => console.log('Lytter på port 8080 ...'));

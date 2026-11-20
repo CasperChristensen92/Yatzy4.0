@@ -16,28 +16,28 @@ let info = {
 }
 
 function opdaterValues() {
-    result.etere = upperSectionScore(1)
-    result.toere = upperSectionScore(2)
-    result.treere = upperSectionScore(3)
-    result.firere = upperSectionScore(4)
-    result.femere = upperSectionScore(5)
-    result.seksere = upperSectionScore(6)
+    result.etere.value = upperSectionScore(1)
+    result.toere.value = upperSectionScore(2)
+    result.treere.value = upperSectionScore(3)
+    result.firere.value = upperSectionScore(4)
+    result.femere.value = upperSectionScore(5)
+    result.seksere.value = upperSectionScore(6)
     
-    result.etPar = onePairScore()
-    result.toPar = twoPairScore()
-    result.treEns = threeOfAKindScore()
-    result.fireEns = fourOfAKindScore()
-    result.lilleStraight = smallStraightScore()
-    result.storeStraight = largeStraightScore()
-    result.fuldtHus = fullHouseScore()
-    result.chance = chanceScore()
-    result.yatzy = yatzyScore()
-    let selectedUpperScores = [result.etere, result.toere, result.treere, result.firere, result.femere, result.seksere].filter(v => v.disabled).map(v => parseInt(v.value))
-    let selectedLowerScores = [result.etPar, result.toPar, result.treEns, result.fireEns, result.lilleStraight, result.storeStraight, result.fuldtHus, result.chance, result.yatzy].filter(v => v.disabled).map(v => parseInt(v.value))
+    result.etPar.value = onePairScore()
+    result.toPar.value = twoPairScore()
+    result.treEns.value = threeOfAKindScore()
+    result.fireEns.value = fourOfAKindScore()
+    result.lilleStraight.value = smallStraightScore()
+    result.storeStraight.value = largeStraightScore()
+    result.fuldtHus.value = fullHouseScore()
+    result.chance.value = chanceScore()
+    result.yatzy.value = yatzyScore()
+    let selectedUpperScores = [result.etere, result.toere, result.treere, result.firere, result.femere, result.seksere].filter(v => v.locked==true).map(v => parseInt(v.value))
+    let selectedLowerScores = [result.etPar, result.toPar, result.treEns, result.fireEns, result.lilleStraight, result.storeStraight, result.fuldtHus, result.chance, result.yatzy].filter(v => v.locked==true).map(v => parseInt(v.value))
 
-    sum.value = sumScore(selectedUpperScores)
-    bonus.value = bonusScore(selectedUpperScores)
-    total.value = totalScore(selectedUpperScores, selectedLowerScores)
+    result.sum.value = sumScore(selectedUpperScores)
+    result.bonus.value = bonusScore(selectedUpperScores)
+    result.total.value = totalScore(selectedUpperScores, selectedLowerScores)
 }
 
 function decreaseCounter() {
@@ -178,7 +178,7 @@ function totalScore(lockedUpperSectionScores, lockedLowerSectionScores) {
 } */
 
 export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter,rollDice}
-
+import { result } from './Player.mjs'
 function rollDice(lockedDice) {
     if (counter > 0) {
         for (let i = 0; i < 5; i++) {
@@ -189,4 +189,5 @@ function rollDice(lockedDice) {
         }
     decreaseCounter()
     }
+    opdaterValues()
 }

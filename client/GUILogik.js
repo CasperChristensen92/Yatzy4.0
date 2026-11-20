@@ -37,12 +37,12 @@ async function getResult() {
 }
 let result = await getResult();
 
-document.querySelector('#et').value = result.etere.value
-document.querySelector('#to').value = result.toere.value
-document.querySelector('#tre').value = result.treere.value
-document.querySelector('#fire').value = result.firere.value
-document.querySelector('#fem').value = result.femere.value
-document.querySelector('#seks').value = result.seksere.value
+document.querySelector('#etere').value = result.etere.value
+document.querySelector('#toere').value = result.toere.value
+document.querySelector('#treere').value = result.treere.value
+document.querySelector('#firere').value = result.firere.value
+document.querySelector('#femere').value = result.femere.value
+document.querySelector('#seksere').value = result.seksere.value
 document.querySelector('#sum').value = result.sum.value
 document.querySelector('#bonus').value = result.bonus.value
 document.querySelector('#etPar').value = result.etPar.value
@@ -50,12 +50,12 @@ document.querySelector('#toPar').value = result.toPar.value
 document.querySelector('#treEns').value = result.treEns.value
 document.querySelector('#fireEns').value = result.fireEns.value
 document.querySelector('#lilleStraight').value = result.lilleStraight.value
-document.querySelector('#storStraight').value = result.storeStraight.value
+document.querySelector('#storeStraight').value = result.storeStraight.value
 document.querySelector('#fuldtHus').value = result.fuldtHus.value
-document.querySelector('#chancen').value = result.chance.value
+document.querySelector('#chance').value = result.chance.value
 document.querySelector('#yatzy').value = result.yatzy.value
 document.querySelector('#total').value = result.total.value
-// Dummy linje
+
 
 
 async function post(url, objekt) {
@@ -69,6 +69,17 @@ async function post(url, objekt) {
     return await respons.json();
 }
 
+async function put(url, objekt) {
+    const respons = await fetch(url, {
+        method: "PUT",
+        body: JSON.stringify(objekt),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if (respons.status !== 200) // Created
+        throw new Error(respons.status);
+    return await respons.json();
+}
+
 slåKnap.addEventListener("click", async function () {
     try {
         let lockedDice = [] // laver liste med de terninger der er låst, så de ikke bliver rullet igen
@@ -76,14 +87,14 @@ slåKnap.addEventListener("click", async function () {
             lockedDice.push(checkbox[i].checked) // true hvis terningen er låst, false hvis den ikke er låst
         }
 
-        let result = await post("http://localhost:8080/rollDice", lockedDice) // sender listen til serveren, som ruller de terninger der ikke er låst;
-        slagTilbage.innerHTML = "Slag tilbage: " + result.newCounter // opdaterer counteren på klienten
+        let rollResult = await post("http://localhost:8080/rollDice", lockedDice) // sender listen til serveren, som ruller de terninger der ikke er låst;
+        slagTilbage.innerHTML = "Slag tilbage: " + rollResult.newCounter // opdaterer counteren på klienten
         for (let i = 0; i < terninger.length; i++) { // opdaterer billederne på klienten
-            terninger[i].src = "images/dice" + result.newDices[i] + ".png"
+            terninger[i].src = "images/dice" + rollResult.newDices[i] + ".png"
         }
 
         //decreaseCounter() // skal nok flyttes til serveren, men for nu er det her
-        opdaterValues() // skal nok flyttes til serveren, men for nu er det her
+        //opdaterValues() // skal nok flyttes til serveren, men for nu er det her
     } catch (error) {
         console.error("Fejl ved rulning af terninger:", error);
     }
@@ -92,13 +103,17 @@ slåKnap.addEventListener("click", async function () {
 
 
 
+let resultatFelter = document.querySelectorAll('.labelText input')
 
-
-for (let r of result) {
-    r.addEventListener("click", function () {
+for (let r of resultatFelter) {
+    r.addEventListener("click", async function () {
+        await put(`http://localhost:8080/result/${r.id}`, {
+            låst: true }
+        )
         r.disabled = true
     })
 }
+
 
 nyRunde.addEventListener("click", async function () {
     /*for (let v of variableArray) {
