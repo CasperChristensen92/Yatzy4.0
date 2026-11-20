@@ -18,6 +18,7 @@ app.post('/rollDice', (request,response) =>{
         newDices: dices,
         newCounter: counter,
     });
+    
 });
 
 app.post('/newRound', (request, response) => {

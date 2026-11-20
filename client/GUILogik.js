@@ -76,14 +76,14 @@ slåKnap.addEventListener("click", async function () {
             lockedDice.push(checkbox[i].checked) // true hvis terningen er låst, false hvis den ikke er låst
         }
 
-        let result = await post("http://localhost:8080/rollDice", lockedDice) // sender listen til serveren, som ruller de terninger der ikke er låst;
-        slagTilbage.innerHTML = "Slag tilbage: " + result.newCounter // opdaterer counteren på klienten
+        let rollResult = await post("http://localhost:8080/rollDice", lockedDice) // sender listen til serveren, som ruller de terninger der ikke er låst;
+        slagTilbage.innerHTML = "Slag tilbage: " + rollResult.newCounter // opdaterer counteren på klienten
         for (let i = 0; i < terninger.length; i++) { // opdaterer billederne på klienten
-            terninger[i].src = "images/dice" + result.newDices[i] + ".png"
+            terninger[i].src = "images/dice" + rollResult.newDices[i] + ".png"
         }
 
         //decreaseCounter() // skal nok flyttes til serveren, men for nu er det her
-        opdaterValues() // skal nok flyttes til serveren, men for nu er det her
+        //opdaterValues() // skal nok flyttes til serveren, men for nu er det her
     } catch (error) {
         console.error("Fejl ved rulning af terninger:", error);
     }
@@ -99,6 +99,7 @@ for (let r of result) {
         r.disabled = true
     })
 }
+
 
 nyRunde.addEventListener("click", async function () {
     /*for (let v of variableArray) {
