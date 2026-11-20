@@ -1,9 +1,3 @@
-import { dices, upperSectionScore, 
-    sumScore, bonusScore, 
-    onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, fullHouseScore, smallStraightScore, largeStraightScore, chanceScore, yatzyScore, decreaseCounter, counter, 
-    totalScore, resetCounter
-} from "../server/Logik.js"
-
 let slåKnap = document.querySelector('#terningerKnap')
 let terninger = document.querySelectorAll('.terning')
 let checkbox = document.querySelectorAll('.cb')
@@ -35,8 +29,9 @@ async function getResult() {
     const response = await fetch('http://localhost:8080/result')
     return await response.json();
 }
-let result = await getResult();
 
+async function opdaterResults() {
+let result = await getResult();
 document.querySelector('#etere').value = result.etere.value
 document.querySelector('#toere').value = result.toere.value
 document.querySelector('#treere').value = result.treere.value
@@ -55,7 +50,8 @@ document.querySelector('#fuldtHus').value = result.fuldtHus.value
 document.querySelector('#chance').value = result.chance.value
 document.querySelector('#yatzy').value = result.yatzy.value
 document.querySelector('#total').value = result.total.value
-
+}
+opdaterResults()
 
 
 async function post(url, objekt) {
@@ -92,7 +88,7 @@ slåKnap.addEventListener("click", async function () {
         for (let i = 0; i < terninger.length; i++) { // opdaterer billederne på klienten
             terninger[i].src = "images/dice" + rollResult.newDices[i] + ".png"
         }
-
+        opdaterResults()
         //decreaseCounter() // skal nok flyttes til serveren, men for nu er det her
         //opdaterValues() // skal nok flyttes til serveren, men for nu er det her
     } catch (error) {
