@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express, { request, response } from 'express';
 import cors from 'cors';
 import { rollDice, dices, counter, resetCounter } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
 import { result } from './Player.mjs'
@@ -34,6 +34,13 @@ app.post('/newGame', (request, response) => {
     response.status(201).json({ 
         message: "Nyt spil startet på serveren"
     });
+});
+
+app.put('/result/:felt', async (request, response) => {
+    let felt = request.params.felt
+    let body = request.body
+    result[felt].locked = body.låst; //.låst tilgår værdien i body der hedder låst, altså true
+    response.json(result)
 });
 
 app.listen(8080, () => console.log('Lytter på port 8080 ...'));
