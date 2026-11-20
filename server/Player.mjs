@@ -18,11 +18,11 @@ let result = {
     "yatzy" : {"value" :0, "locked" : false },
     "total" : {"value" :0, "locked" : false }
 }
-
 let player = {
     "name" : null,
-    "Highscore" : 0,
+    "highscore" : 0,
     "result" : result,
+    "old results" : []
 }
 
 export {result}
