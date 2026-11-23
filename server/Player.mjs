@@ -23,12 +23,20 @@ function createResult() {
 }
 let result = createResult()
 
-let player = {
+function createPlayer() {
+    return {
     "name" : null,
     "highscore" : 0,
     "result" : result,
     "oldResults" : []
+    }   
+    players.push(player)
 }
+
+let player = createPlayer()
+
+let players = []
+
 
 // Resetter result objektet til et nyt objekt med alle værdier sat til 0 og alle låst sat til false
 function resetResult() {
