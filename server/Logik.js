@@ -1,22 +1,13 @@
-export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter,rollDice, nulstilValues, setLockedFalse}
-import { result } from './Player.mjs'
+export {upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, totalScore, resetCounter,rollDice, nulstilValues, setLockedFalse}
+import { result, player } from './Player.mjs'
 
-let counter = 3 //tæller til at sørge for der kun er 3 slag i alt, opdateres efter hvert slag
-const dices = []
+// let counter = 3 //tæller til at sørge for der kun er 3 slag i alt, opdateres efter hvert slag
+// const dices = []
 
-// øvre sektion
-let etere , toere, treere, firere, femere, seksere;
-let sum; // nødvendig?
-let bonus; // nødvendig?
-
-// nedre sektion
-let etPar, toPar, treEns, fireEns, lilleStraight, storeStraight, fuldtHus, chance, Yatzy;
-let total; // nødvendig?
-
-let info = {
-    "counter" : 3,
-    "dices" : []
-}
+// let info = {
+//     "counter" : 3,
+//     "dices" : []
+// }
 
 let scoreMethods = {
     etere: () => upperSectionScore(1),
@@ -36,7 +27,8 @@ let scoreMethods = {
     yatzy: yatzyScore
 }
 
-function opdaterValues() {
+function opdaterValues(player) {
+    let result = player.result;
     for (let felt of Object.keys(scoreMethods)) {
         if (!result[felt].locked) {
             result[felt].value = scoreMethods[felt]()
@@ -50,10 +42,10 @@ function opdaterValues() {
     result.total.value = totalScore(selectedUpperScores, selectedLowerScores)
 }
 
-function nulstilValues() {
-    for (let felt in result) {
-        if (!result[felt].locked) {
-            result[felt].value = 0;
+function nulstilValues(player) {
+    for (let felt in scoreMethods) {
+        if (!player.result[felt].locked) {
+            player.result[felt].value = 0;
         }
     }
 }
@@ -67,24 +59,23 @@ function setLockedFalse() {
     nulstilValues();
 }
 
-function decreaseCounter() {
-    counter--
+function decreaseCounter(player) {
+    player.counter--
 }
 
-function resetCounter() {
-    counter = 3
+function resetCounter(player) {
+    player.counter = 3
 }
 
 // Felterne 1-6 symboliserer hver sin terning. "Count" tæller hvor mange terninger der er af hver "størrelse"
 // Feltet 0 bliver ikke brugt
-function countEyes() {
+function countEyes(player) {
         let counts = [0,0,0,0,0,0,0];
-        for (let d of dices) {
+        for (let d of player.dices) {
             counts[d]++;
         }
         return counts;
     }
-
 
 
 function upperSectionScore(eye) {
@@ -99,11 +90,7 @@ function sumScore(sectionScores) {
     }
     return sum;
 }
-/*function sumScore() {
-    let sum = result.etere + result.toere + result.trere + result.firere + result.femere + result.seksere;
-    
-    return sum;
-}*/
+
 
 function bonusScore(lockedUpperSectionScores) {
     if (sumScore(lockedUpperSectionScores) >= 63) {
@@ -111,12 +98,7 @@ function bonusScore(lockedUpperSectionScores) {
     }
     else return 0;
 }
-/*function bonusScore() {
-    if (sumScore() >= 63) {
-        return 50;
-    }
-    else return 0;
-}*/
+
 
 // Starter med højeste tal (6). Hvis hvis der findes flere terninger, vælges den. 
 function onePairScore() {
@@ -200,20 +182,17 @@ function yatzyScore() {
 function totalScore(lockedUpperSectionScores, lockedLowerSectionScores) {
     return sumScore(lockedUpperSectionScores) + bonusScore(lockedUpperSectionScores) + sumScore(lockedLowerSectionScores);
 }
-/*function totalScore() {
-    return result.sum + result.bonusScore + result.etPar + result.toPar + result.treEns + result.fireEns + result.fuldtHus + result.lilleStraight  +result.storeStraight + result.chance + result.yatzy;
-} */
 
 
-function rollDice(lockedDice) {
-    if (counter > 0) {
+function rollDice(lockedDice, player) {
+    if (player.counter > 0) {
         for (let i = 0; i < 5; i++) {
             if (!lockedDice[i]) {
                 let slag = Math.floor(Math.random() * 6) + 1;
                 dices[i] = slag;
             }
         }
-    decreaseCounter()
+    decreaseCounter(player)
     }
-    opdaterValues()
+    opdaterValues(player)
 }

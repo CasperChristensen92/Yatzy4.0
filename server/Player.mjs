@@ -23,16 +23,15 @@ function createResult() {
 }
 let result = createResult()
 
-let players = []
-
 function createPlayer(navn) {
     const newPlayer = {
         "name" : navn,
         "highscore" : 0,
-        "result" : result,
+        "result" : createResult(),
+        "counter" : 3,
+        "dices" : [],
         "oldResults" : []
     };
-    players.push(newPlayer);
     return newPlayer;
 }
 
@@ -42,15 +41,14 @@ let player = createPlayer()
 
 
 // Resetter result objektet til et nyt objekt med alle værdier sat til 0 og alle låst sat til false
-function resetResult() {
-    result = createResult()
-    player.result = result
+function resetResult(player) {
+    player.result = createResult()
 }
 
 // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
-function saveResult() {
+function saveResult(player) {
     player.oldResults.push(player.result)
-    resetResult()
+    resetResult(player)
 }
 
 export {result, player, resetResult, saveResult, createPlayer}
