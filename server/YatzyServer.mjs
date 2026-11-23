@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 
 
 
-import { rollDice, dices, counter, resetCounter, nulstilValues } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
+import { rollDice, dices, counter, resetCounter, nulstilValues, setLockedFalse } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
 import { result } from './Player.mjs'
 
 const app = express();
