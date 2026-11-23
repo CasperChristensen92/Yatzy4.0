@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 
 
 import { rollDice, dices, counter, resetCounter, nulstilValues, setLockedFalse } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
-import { result } from './Player.mjs'
+import { result,saveResult,createPlayer } from './Player.mjs'
 
 const app = express();
 
@@ -96,12 +96,15 @@ app.post('/join', (request, response) => {
     request.session.playerName = name;
     players.set(request.sessionID, name);
 
+    createPlayer(name) // Opretter en ny spiller med et nyt result objekt, som gemmes i players arrayet
+    
     request.session.save((err) => {
         if (err) {
             return response.status(500).send('Sessionen kunne ikke gemmes')
         }
         response.redirect('/game'); // Spilleren sendes videre til spil-siden
     });
+
 
 });
 
@@ -140,6 +143,7 @@ app.post('/newRound', (request, response) => {
 
 app.post('/newGame', (request, response) => {
     resetCounter(); // Reset counteren til 3 for en ny runde
+    saveResult(); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
     dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
     response.status(201).json({ 
         message: "Nyt spil startet på serveren"

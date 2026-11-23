@@ -2,7 +2,8 @@ let slåKnap = document.querySelector('#terningerKnap')
 let terninger = document.querySelectorAll('.terning')
 let checkbox = document.querySelectorAll('.cb')
 let slagTilbage = document.querySelector('#counter')
-let serverIP = "10.10.139.21:8080"
+let serverIP = "127.0.0.1:8080"
+//let serverIP = "10.10.139.21:8080"
 // result.etere = document.querySelector('#et')
 // result.toere = document.querySelector('#to')
 // result.treere = document.querySelector('#tre')
@@ -101,6 +102,7 @@ slåKnap.addEventListener("click", async function () {
 
 let resultatFelter = document.querySelectorAll('.labelText input')
 
+
 for (let r of resultatFelter) {
     r.addEventListener("click", async function () {
         await put(`http://${serverIP}/result/${r.id}`, {
@@ -127,16 +129,24 @@ nyRunde.addEventListener("click", async function () {
     try {
         await post("http://" + serverIP + "/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
             slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
+            await opdaterResults();
         } catch (error) {
             console.error("Fejl ved nulstilling af runde:", error);
         }
 })
 
 nytSpil.addEventListener("click", async function() {
-    for (let v of variableArray) {
+    for (let v of resultatFelter) {
         v.disabled = false
         v.value = ""
     }
+
+    let sumFelt = document.querySelector('#sum')
+    sumFelt.value = ""
+    let bonusFelt = document.querySelector('#bonus')
+    bonusFelt.value = ""
+    let totalFelt = document.querySelector('#total')
+    totalFelt.value = ""
     for (let cb of checkbox) {
         cb.checked = false
     }

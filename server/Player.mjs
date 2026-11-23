@@ -1,4 +1,6 @@
-let result = {
+// Returnerer et nyt result objekt med alle værdier sat til 0 og alle låst sat til false
+function createResult() {
+    return {
     "etere" : {"value" :0, "locked" : false },
     "toere" : {"value" :0, "locked" : false },
     "treere" : {"value" :0, "locked" : false },
@@ -17,12 +19,38 @@ let result = {
     "chance" : {"value" :0, "locked" : false },
     "yatzy" : {"value" :0, "locked" : false },
     "total" : {"value" :0, "locked" : false }
+    };
 }
-let player = {
-    "name" : null,
-    "highscore" : 0,
-    "result" : result,
-    "old results" : []
+let result = createResult()
+
+let players = []
+
+function createPlayer(navn) {
+    const newPlayer = {
+        "name" : navn,
+        "highscore" : 0,
+        "result" : result,
+        "oldResults" : []
+    };
+    players.push(newPlayer);
+    return newPlayer;
 }
 
-export {result}
+let player = createPlayer()
+
+
+
+
+// Resetter result objektet til et nyt objekt med alle værdier sat til 0 og alle låst sat til false
+function resetResult() {
+    result = createResult()
+    player.result = result
+}
+
+// Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
+function saveResult() {
+    player.oldResults.push(player.result)
+    resetResult()
+}
+
+export {result, player, resetResult, saveResult, createPlayer}
