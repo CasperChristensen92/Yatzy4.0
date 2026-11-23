@@ -2,7 +2,7 @@ let slåKnap = document.querySelector('#terningerKnap')
 let terninger = document.querySelectorAll('.terning')
 let checkbox = document.querySelectorAll('.cb')
 let slagTilbage = document.querySelector('#counter')
-let serverIP = "127.0.0.1:8080"
+let serverIP = window.location.host
 let nytSpil = document.querySelector('#nytSpilKnap')
 let nyRunde = document.querySelector('#nyRundeKnap')
 
