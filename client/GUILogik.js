@@ -113,16 +113,16 @@ for (let r of resultatFelter) {
 
 
 nyRunde.addEventListener("click", async function () {
-    /*for (let v of variableArray) {
-        if (!v.disabled) {
-            v.value = ""
-        }
-    }*/
     for (let t of terninger) {
         t.src = "images/dice1.png"
     }
     for (let cb of checkbox) {
         cb.checked = false
+    }
+    for (let r of resultatFelter) {
+        if (!r.disabled) {
+            r.value = ""
+        }
     }
     
     try {

@@ -7,8 +7,8 @@ import { fileURLToPath } from 'url';
 
 
 
-import { rollDice, dices, counter, resetCounter } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
-import { result, resetResult, saveResult} from './Player.mjs'
+import { rollDice, dices, counter, resetCounter, nulstilValues } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
+import { result } from './Player.mjs'
 
 const app = express();
 
@@ -96,6 +96,7 @@ app.post('/rollDice', (request,response) =>{
 
 app.post('/newRound', (request, response) => {
     resetCounter(); // Reset counteren til 3 for en ny runde
+    nulstilValues();
     dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
     response.status(201).json({ 
         message: "Runde nulstillet på serveren"
