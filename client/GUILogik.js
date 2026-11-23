@@ -2,7 +2,7 @@ let slåKnap = document.querySelector('#terningerKnap')
 let terninger = document.querySelectorAll('.terning')
 let checkbox = document.querySelectorAll('.cb')
 let slagTilbage = document.querySelector('#counter')
-
+let serverIP = "10.10.139.21:8080"
 // result.etere = document.querySelector('#et')
 // result.toere = document.querySelector('#to')
 // result.treere = document.querySelector('#tre')
@@ -26,7 +26,7 @@ let nyRunde = document.querySelector('#nyRundeKnap')
 
 
 async function getResult() {
-    const response = await fetch('http://localhost:8080/result')
+    const response = await fetch('http://'+serverIP+'/result')
     return await response.json();
 }
 
@@ -83,7 +83,7 @@ slåKnap.addEventListener("click", async function () {
             lockedDice.push(checkbox[i].checked) // true hvis terningen er låst, false hvis den ikke er låst
         }
 
-        let rollResult = await post("http://localhost:8080/rollDice", lockedDice) // sender listen til serveren, som ruller de terninger der ikke er låst;
+        let rollResult = await post("http://"+serverIP+"/rollDice", lockedDice) // sender listen til serveren, som ruller de terninger der ikke er låst;
         slagTilbage.innerHTML = "Slag tilbage: " + rollResult.newCounter // opdaterer counteren på klienten
         for (let i = 0; i < terninger.length; i++) { // opdaterer billederne på klienten
             terninger[i].src = "images/dice" + rollResult.newDices[i] + ".png"
@@ -103,7 +103,7 @@ let resultatFelter = document.querySelectorAll('.labelText input')
 
 for (let r of resultatFelter) {
     r.addEventListener("click", async function () {
-        await put(`http://localhost:8080/result/${r.id}`, {
+        await put(`http://${serverIP}/result/${r.id}`, {
             låst: true }
         )
         r.disabled = true
@@ -125,7 +125,7 @@ nyRunde.addEventListener("click", async function () {
     }
     
     try {
-        await post("http://localhost:8080/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
+        await post("http://" + serverIP + "/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
             slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
         } catch (error) {
             console.error("Fejl ved nulstilling af runde:", error);
@@ -145,7 +145,7 @@ nytSpil.addEventListener("click", async function() {
     }
 
     try {
-        await post("http://localhost:8080/newGame", {}) // sender en anmodning til serveren om at starte et nyt spil
+        await post("http://" + serverIP + "/newGame", {}) // sender en anmodning til serveren om at starte et nyt spil
         slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
     } catch (error) {
         console.error("Fejl ved nulstilling af spil:", error);
