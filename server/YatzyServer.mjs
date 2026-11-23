@@ -7,8 +7,8 @@ import { fileURLToPath } from 'url';
 
 
 
-import { rollDice, dices, counter, resetCounter, nulstilValues, setLockedFalse } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
-import { result,saveResult,createPlayer, player } from './Player.mjs'
+import { rollDice, resetCounter, nulstilValues, setLockedFalse } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
+import { saveResult,createPlayer } from './Player.mjs'
 
 const app = express();
 
@@ -122,8 +122,8 @@ app.post('/newGame', (request, response) => {
     resetCounter(); // Reset counteren til 3 for en ny runde
     for (let player of players.values()) {
         saveResult(player); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
+        player.dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
     }
-    dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
     response.status(201).json({ 
         message: "Nyt spil startet på serveren"
     });
