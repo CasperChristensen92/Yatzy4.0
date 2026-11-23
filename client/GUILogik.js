@@ -2,7 +2,8 @@ let slåKnap = document.querySelector('#terningerKnap')
 let terninger = document.querySelectorAll('.terning')
 let checkbox = document.querySelectorAll('.cb')
 let slagTilbage = document.querySelector('#counter')
-let serverIP = "10.10.139.21:8080"
+let serverIP = "127.0.0.1:8080"
+//let serverIP = "10.10.139.21:8080"
 // result.etere = document.querySelector('#et')
 // result.toere = document.querySelector('#to')
 // result.treere = document.querySelector('#tre')
@@ -133,10 +134,10 @@ nyRunde.addEventListener("click", async function () {
 })
 
 nytSpil.addEventListener("click", async function() {
-    for (let v of variableArray) {
-        v.disabled = false
-        v.value = ""
-    }
+    //for (let v of variableArray) {
+    //    v.disabled = false
+    //    v.value = ""
+    //}
     for (let cb of checkbox) {
         cb.checked = false
     }
@@ -150,4 +151,6 @@ nytSpil.addEventListener("click", async function() {
     } catch (error) {
         console.error("Fejl ved nulstilling af spil:", error);
     }
+
+     getResult() // <-- Kald Aksels nye funktion her for at opdatere resultaterne på klienten
 })
