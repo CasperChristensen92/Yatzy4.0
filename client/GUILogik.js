@@ -129,6 +129,7 @@ nyRunde.addEventListener("click", async function () {
     try {
         await post("http://" + serverIP + "/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
             slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
+            await opdaterResults();
         } catch (error) {
             console.error("Fejl ved nulstilling af runde:", error);
         }
