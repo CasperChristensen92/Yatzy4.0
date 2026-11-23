@@ -102,6 +102,7 @@ slåKnap.addEventListener("click", async function () {
 
 let resultatFelter = document.querySelectorAll('.labelText input')
 
+
 for (let r of resultatFelter) {
     r.addEventListener("click", async function () {
         await put(`http://${serverIP}/result/${r.id}`, {
@@ -138,6 +139,13 @@ nytSpil.addEventListener("click", async function() {
         v.disabled = false
         v.value = ""
     }
+
+    let sumFelt = document.querySelector('#sum')
+    sumFelt.value = ""
+    let bonusFelt = document.querySelector('#bonus')
+    bonusFelt.value = ""
+    let totalFelt = document.querySelector('#total')
+    totalFelt.value = ""
     for (let cb of checkbox) {
         cb.checked = false
     }
