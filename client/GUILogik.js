@@ -134,10 +134,17 @@ nyRunde.addEventListener("click", async function () {
 })
 
 nytSpil.addEventListener("click", async function() {
+<<<<<<< HEAD
     //for (let v of variableArray) {
     //    v.disabled = false
     //    v.value = ""
     //}
+=======
+    for (let r of resultatFelter) {
+        r.disabled = false
+        r.value = ""
+    }
+>>>>>>> 00cc1c0e161c63fc25f6f79c557a51a912172685
     for (let cb of checkbox) {
         cb.checked = false
     }
