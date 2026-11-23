@@ -158,6 +158,4 @@ nytSpil.addEventListener("click", async function() {
     } catch (error) {
         console.error("Fejl ved nulstilling af spil:", error);
     }
-
-     getResult() // <-- Kald Aksels nye funktion her for at opdatere resultaterne på klienten
 })
