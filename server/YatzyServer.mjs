@@ -91,20 +91,28 @@ app.get('/result', async(request, response) => {
 })
 
 app.post('/rollDice', (request,response) =>{
+    let player = players.get(request.sessionID)
+    if (!player) {
+        return response.status(401).json({error: 'Ingen spiller fundet'})
+    }
     let lockedDice = request.body; // modtager listen med de låste terninger fra klienten
-    rollDice(lockedDice) // sender listen til rollDice funktionen, som ruller de terninger der ikke er låst;
+    rollDice(lockedDice, player) // sender listen til rollDice funktionen, som ruller de terninger der ikke er låst;
     response.status(201).json({ 
-        newDices: dices,
-        newCounter: counter,
-        result: result
+        newDices: player.dices,
+        newCounter: player.counter,
+        result: player.result
     });
     
 });
 
 app.post('/newRound', (request, response) => {
-    resetCounter(); // Reset counteren til 3 for en ny runde
-    nulstilValues();
-    dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
+    let player = players.get(request.sessionID)
+    if (!player) {
+        return response.status(401).json({error: 'Ingen spiller fundet'})
+    }
+    resetCounter(player); // Reset counteren til 3 for en ny runde
+    nulstilValues(player);
+    player.dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
     response.status(201).json({ 
         message: "Runde nulstillet på serveren"
     });
@@ -112,7 +120,9 @@ app.post('/newRound', (request, response) => {
 
 app.post('/newGame', (request, response) => {
     resetCounter(); // Reset counteren til 3 for en ny runde
-    saveResult(); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
+    for (let player of players.values()) {
+        saveResult(player); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
+    }
     dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
     response.status(201).json({ 
         message: "Nyt spil startet på serveren"
