@@ -1,4 +1,4 @@
-export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter,rollDice, nulstilValues}
+export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter,rollDice, nulstilValues, setLockedFalse}
 import { result } from './Player.mjs'
 
 let counter = 3 //tæller til at sørge for der kun er 3 slag i alt, opdateres efter hvert slag
@@ -56,6 +56,15 @@ function nulstilValues() {
             result[felt].value = 0;
         }
     }
+}
+
+function setLockedFalse() {
+    for (let felt in result) {
+        if (result[felt].locked) {
+            result[felt].locked = false
+        }
+    }
+    nulstilValues();
 }
 
 function decreaseCounter() {
