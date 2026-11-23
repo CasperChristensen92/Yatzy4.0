@@ -10,29 +10,49 @@ html(lang="da")
         main.forside
             h1 Velkommen til Yatzy-spillet! 
             p Spil Yatzy og se de andre tilmeldte spillere.
-            
-            h2 Tilmeld dig spillet
+        
 
-            if currentPlayer
-                p Du er tilmeldt som #{currentPlayer}
-                a(href="/game") Fortsæt til spillet
-            else
-                form(action="/join", method="POST")
-                    label(for="name") Indtast spillernavn: 
-                    input#name(type="text", name="name", maxLength="30", required)
-                    button(type="submit") Start spil
+            p#game-status(data-status=status)
+                if status === 'playing'
+                    | Et spil er allerede i gang. Vent på at det bliver færdigt.
+                else
+                    | Lobbyen er åben. Du kan tilmelde dig.
 
 
-            h2 Tilmeldte spillere:
+            if status === 'lobby'
+                if currentPlayer
+                    p Du er tilmeldt som #{currentPlayer}
+                    button#start-game(type="button") Start spil for alle
+                else 
+                    h2 Tilmeld dig spillet
+                    form(action="/join", method="POST")
+                        label(for="name") Indtast spillernavn: 
+                        input#name(type="text", name="name", maxLength="30", required)
+                        button(type="submit") Tilmeld dig
+            else if currentPlayer
+                p Du er med i spillet som #{currentPlayer}.
+            else 
+                p Du kan tilmelde dig, når spillet er færdigt.
 
-            if players.length > 0
-                ul
-                    each player in players
-                        li= player
 
-            else
-                p Der er ingen spillere endnu
+            p#lobby-message(role="status")
 
+            h2 Scoreboard
+
+            table.scoreboard
+                thead
+                    tr
+                        th Spiller 
+                        th Point 
+                        th Felter
+                tbody#scoreboard-body 
+                    each player in players 
+                        tr
+                            td= player.name
+                            td= player.total
+                            td= player.completedCategories
+
+            p#empty-scoreboard(hidden=players.length > 0) Der er ingen tilmeldte spillere.
 
 
             

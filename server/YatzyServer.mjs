@@ -39,12 +39,47 @@ app.use(session({
 
 const players = new Map(); // spillere gemmes med session-ID og navn som key og value
 
+let gameStatus = 'lobby';
+
+const scoreFields = [
+    'etere', 'toere', 'treere', 'firere', 'femere', 'seksere',
+    'etPar', 'toPar', 'treEns', 'fireEns', 'lilleStraight',
+    'storStraight', 'fuldtHus', 'chance', 'yatzy'
+];
+
+// Ændrer
+function getScoreboard() {
+    return [...players.values()].map(player => {
+        const playerResult = player.result;
+
+        return {
+            name: player.name,
+            total: playerResult?.total?.value ?? null,
+            completedCategories: playerResult
+                ? scoreFields.filter(felt => playerResult[felt]?.locked).length
+                : null
+        };
+
+    });
+}
+
+function resetGameData() {
+    resetCounter();
+    dices.length = 0;
+
+    for (const felt of Object.values(result)) {
+        felt.value = 0;
+        felt.locked = false;
+    }
+}
+
 
 // Når en bruger besøger forsiden. Forsiden er skrevet i .pug, så den skal renders til html
 app.get('/', (request, response) => {
     response.render('forside', {
-        players: [...players.values()], // Pug får listen af spillere
-        currentPlayer: request.session.playerName // Henter navn på aktuel spiller, fra spillerens session, hvis den allerede findes
+        status: gameStatus,
+        players: getScoreboard(), // Pug får listen af spillere
+        currentPlayer: players.get(request.sessionID)?.name ?? null // Henter navn på aktuel spiller, fra spillerens session, hvis den allerede findes
     });
 
 });
