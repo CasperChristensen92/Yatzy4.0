@@ -1,3 +1,6 @@
+export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter,rollDice, nulstilValues}
+import { result } from './Player.mjs'
+
 let counter = 3 //tæller til at sørge for der kun er 3 slag i alt, opdateres efter hvert slag
 const dices = []
 
@@ -45,6 +48,14 @@ function opdaterValues() {
     result.sum.value = sumScore(selectedUpperScores)
     result.bonus.value = bonusScore(selectedUpperScores)
     result.total.value = totalScore(selectedUpperScores, selectedLowerScores)
+}
+
+function nulstilValues() {
+    for (let felt in result) {
+        if (!result[felt].locked) {
+            result[felt].value = 0;
+        }
+    }
 }
 
 function decreaseCounter() {
@@ -184,8 +195,7 @@ function totalScore(lockedUpperSectionScores, lockedLowerSectionScores) {
     return result.sum + result.bonusScore + result.etPar + result.toPar + result.treEns + result.fireEns + result.fuldtHus + result.lilleStraight  +result.storeStraight + result.chance + result.yatzy;
 } */
 
-export {dices, upperSectionScore, sumScore, bonusScore, onePairScore, twoPairScore, threeOfAKindScore, fourOfAKindScore, smallStraightScore, largeStraightScore, fullHouseScore, chanceScore, yatzyScore, decreaseCounter, counter, totalScore, resetCounter,rollDice}
-import { result } from './Player.mjs'
+
 function rollDice(lockedDice) {
     if (counter > 0) {
         for (let i = 0; i < 5; i++) {
