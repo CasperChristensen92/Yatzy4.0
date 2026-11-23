@@ -4,15 +4,6 @@ import { result } from './Player.mjs'
 let counter = 3 //tæller til at sørge for der kun er 3 slag i alt, opdateres efter hvert slag
 const dices = []
 
-// øvre sektion
-let etere , toere, treere, firere, femere, seksere;
-let sum; // nødvendig?
-let bonus; // nødvendig?
-
-// nedre sektion
-let etPar, toPar, treEns, fireEns, lilleStraight, storeStraight, fuldtHus, chance, Yatzy;
-let total; // nødvendig?
-
 let info = {
     "counter" : 3,
     "dices" : []
@@ -51,7 +42,7 @@ function opdaterValues() {
 }
 
 function nulstilValues() {
-    for (let felt in result) {
+    for (let felt in scoreMethods) {
         if (!result[felt].locked) {
             result[felt].value = 0;
         }

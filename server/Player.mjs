@@ -23,16 +23,13 @@ function createResult() {
 }
 let result = createResult()
 
-let players = []
-
 function createPlayer(navn) {
     const newPlayer = {
         "name" : navn,
         "highscore" : 0,
-        "result" : result,
+        "result" : createResult(),
         "oldResults" : []
     };
-    players.push(newPlayer);
     return newPlayer;
 }
 

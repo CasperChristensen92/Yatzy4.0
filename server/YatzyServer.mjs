@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 
 
 import { rollDice, dices, counter, resetCounter, nulstilValues, setLockedFalse } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
-import { result,saveResult,createPlayer } from './Player.mjs'
+import { result,saveResult,createPlayer, player } from './Player.mjs'
 
 const app = express();
 
@@ -37,7 +37,7 @@ app.use(session({
 
 
 
-const players = new Map(); // spillere gemmes med session-ID og navn som key og value
+const players = new Map(); // spillere gemmes med session-ID og player som key og value
 
 
 // Når en bruger besøger forsiden. Forsiden er skrevet i .pug, så den skal renders til html
@@ -59,9 +59,9 @@ app.post('/join', (request, response) => {
     }
 
     request.session.playerName = name;
-    players.set(request.sessionID, name);
-
-    createPlayer(name) // Opretter en ny spiller med et nyt result objekt, som gemmes i players arrayet
+    let player = createPlayer(name)
+    players.set(request.sessionID, player)
+// Opretter en ny spiller med et nyt result objekt, som gemmes i players arrayet
     
     request.session.save((err) => {
         if (err) {
@@ -83,7 +83,11 @@ app.get('/game', (request, response) => {
 
 
 app.get('/result', async(request, response) => {
-    response.json(result)
+    let player = players.get(request.sessionID)
+    if (!player) {
+        return response.status(401).json({error: 'Ingen spiller fundet'})
+    }
+    response.json(player.result)
 })
 
 app.post('/rollDice', (request,response) =>{
@@ -115,11 +119,15 @@ app.post('/newGame', (request, response) => {
     });
 });
 
-app.put('/result/:felt', async (request, response) => {
+app.put('/result/:felt', (request, response) => {
     let felt = request.params.felt
     let body = request.body
-    result[felt].locked = body.låst; //.låst tilgår værdien i body der hedder låst, altså true
-    response.json(result)
+    let player = players.get(request.sessionID)
+    if (!player) {
+        return response.status(401).json({error: 'Ingen spiller fundet'})
+    }
+    player.result[felt].locked = body.låst; //.låst tilgår værdien i body der hedder låst, altså true
+    response.json(player.result)
 });
 
 app.listen(8080, () => console.log('Lytter på port 8080 ...'));
