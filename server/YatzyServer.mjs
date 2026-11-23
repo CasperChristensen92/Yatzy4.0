@@ -87,6 +87,15 @@ app.get('/', (request, response) => {
 
 // Modtager spillerens navn fra forsiden. Navnet gemmes i sessionen og tilføjes til listen
 app.post('/join', (request, response) => {
+
+    if (gameStatus !== 'lobby') {
+        return response.status(409).send('Spillet er allerede i gang. Vent på næste spil.');
+    }
+
+    if (players.has(request.sessionID)) {
+        return response.redirect('/');
+    }
+
     const name = String(request.body.name ?? '').trim();
 
     if (name.length === 0 || name.length > 30) {
@@ -102,7 +111,7 @@ app.post('/join', (request, response) => {
         if (err) {
             return response.status(500).send('Sessionen kunne ikke gemmes')
         }
-        response.redirect('/game'); // Spilleren sendes videre til spil-siden
+        response.redirect('/'); // Spilleren sendes videre til spil-siden
     });
 
 
