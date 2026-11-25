@@ -12,6 +12,28 @@ async function getResult() {
     return await response.json();
 }
 
+async function getPlayers() {
+    const response = await fetch('http://'+serverIP+'/players')
+    return await response.json();
+}
+
+async function opdaterSpillerListe() {
+    let players = await getPlayers();
+    let liste = document.querySelector('#spillerListe');
+
+    liste.innerHTML = "";
+
+    for (let player of players) {
+        let låsteFelter = Object.keys(player.result).filter(felt => player.result[felt].locked);
+
+        let li = document.createElement('li');
+        li.textContent = `${player.name}: ${player.result.total.value} point | Låste felter: ${låsteFelter.join(', ')}`;
+        liste.appendChild(li);
+    }
+}
+opdaterSpillerListe();
+setInterval(opdaterSpillerListe, 2000);
+
 async function opdaterResults() {
 let result = await getResult();
 document.querySelector('#etere').value = result.etere.value
@@ -89,6 +111,7 @@ for (let r of resultatFelter) {
         )
         r.disabled = true
         await opdaterResults();
+        await opdaterSpillerListe();
     })
 }
 
@@ -110,6 +133,7 @@ nyRunde.addEventListener("click", async function () {
         await post("http://" + serverIP + "/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
             slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
             await opdaterResults();
+            await opdaterSpillerListe();
         } catch (error) {
             console.error("Fejl ved nulstilling af runde:", error);
         }
@@ -137,6 +161,7 @@ nytSpil.addEventListener("click", async function() {
     try {
         await post("http://" + serverIP + "/newGame", {}) // sender en anmodning til serveren om at starte et nyt spil
         slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
+        await opdaterSpillerListe();
     } catch (error) {
         console.error("Fejl ved nulstilling af spil:", error);
     }

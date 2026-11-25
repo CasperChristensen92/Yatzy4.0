@@ -81,6 +81,10 @@ app.get('/game', (request, response) => {
     response.sendFile(path.join(projectRoot, 'client', 'GUI.html'));
 });
 
+app.get('/players', (request, response) => {
+    response.json( [...players.values()]);
+})
+
 
 app.get('/result', async(request, response) => {
     let player = players.get(request.sessionID)
