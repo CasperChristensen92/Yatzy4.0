@@ -115,6 +115,13 @@ slåKnap.addEventListener("click", async function () {
 
         let rollResult = await post("http://"+serverIP+"/rollDice", lockedDice) // sender listen til serveren, som ruller de terninger der ikke er låst;
         slagTilbage.innerHTML = "Slag tilbage: " + rollResult.newCounter // opdaterer counteren på klienten
+
+        if (rollResult.newCounter < 3 && rollResult.newDices.length === 5) {
+            for (let cb of checkbox) {
+                cb.disabled = false;
+            }
+        }
+
         for (let i = 0; i < terninger.length; i++) { // opdaterer billederne på klienten
             terninger[i].src = "images/dice" + rollResult.newDices[i] + ".png"
         }
@@ -154,6 +161,7 @@ nyRunde.addEventListener("click", async function () {
         }
         for (let cb of checkbox) {
             cb.checked = false
+            cb.disabled = true;
         }
         for (let r of resultatFelter) {
             if (!r.disabled) {
@@ -181,6 +189,7 @@ nytSpil.addEventListener("click", async function() {
         }
         for (let cb of checkbox) {
             cb.checked = false
+            cb.disabled = true;
         }
         for (let t of terninger) {
             t.src = "images/dice1.png"
