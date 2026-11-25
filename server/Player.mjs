@@ -30,7 +30,9 @@ function createPlayer(navn) {
         "result" : createResult(),
         "counter" : 3,
         "dices" : [],
-        "oldResults" : []
+        "oldResults" : [],
+        "roundLock" : false,
+        "wins" : 0
     };
     return newPlayer;
 }
@@ -51,4 +53,14 @@ function saveResult(player) {
     resetResult(player)
 }
 
-export {result, player, resetResult, saveResult, createPlayer}
+function finishedCheck(player){
+    let result = player.result;
+    for (let felt of Object.keys(result)) {
+        if (!result[felt].locked) {
+            return false
+        }
+    }
+    return true
+}
+
+export {result, player, resetResult, saveResult, createPlayer, finishedCheck}

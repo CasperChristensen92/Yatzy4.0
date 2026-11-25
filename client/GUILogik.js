@@ -12,6 +12,28 @@ async function getResult() {
     return await response.json();
 }
 
+async function getPlayers() {
+    const response = await fetch('http://'+serverIP+'/players')
+    return await response.json();
+}
+
+async function opdaterSpillerListe() {
+    let players = await getPlayers();
+    let liste = document.querySelector('#spillerListe');
+
+    liste.innerHTML = "";
+
+    for (let player of players) {
+        let låsteFelter = Object.keys(player.result).filter(felt => player.result[felt].locked);
+
+        let li = document.createElement('li');
+        li.textContent = `${player.name}: ${player.result.total.value} point | Låste felter: ${låsteFelter.join(', ')}`;
+        liste.appendChild(li);
+    }
+}
+opdaterSpillerListe();
+setInterval(opdaterSpillerListe, 2000);
+
 async function opdaterResults() {
 let result = await getResult();
 document.querySelector('#etere').value = result.etere.value
@@ -114,65 +136,80 @@ slåKnap.addEventListener("click", async function () {
 
 let resultatFelter = document.querySelectorAll('.labelText input')
 
-
 for (let r of resultatFelter) {
     r.addEventListener("click", async function () {
-        await put(`http://${serverIP}/result/${r.id}`, {
-            låst: true }
-        )
-        r.disabled = true
-        await opdaterResults();
-    })
+        try{
+            await put(`http://${serverIP}/result/${r.id}`, { låst: true }); // låser feltet for player object
+            r.disabled = true // låser feltet i GUI
+            await opdaterResults();
+            await opdaterSpillerListe();
+
+        } catch(error){
+            r.disabled = false;
+            console.error("Fejl ved låsning af felt:", error);
+        }
+    });
 }
 
 
 nyRunde.addEventListener("click", async function () {
-    for (let t of terninger) {
-        t.src = "images/dice1.png"
-    }
-    for (let cb of checkbox) {
-        cb.checked = false
-        cb.disabled = true;
-    }
-    for (let r of resultatFelter) {
-        if (!r.disabled) {
-            r.value = ""
-        }
-    }
-    
     try {
         await post("http://" + serverIP + "/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
-            slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
-            await opdaterSomeResults();
-        } catch (error) {
-            console.error("Fejl ved nulstilling af runde:", error);
+
+        for (let t of terninger) {
+            t.src = "images/dice1.png"
         }
+        for (let cb of checkbox) {
+            cb.checked = false
+            cb.disabled = true;
+        }
+        for (let r of resultatFelter) {
+            if (!r.disabled) {
+                r.value = ""
+            }
+        }            
+        slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
+        await opdaterResults();
+        await opdaterSpillerListe();
+    } 
+    catch (error) {
+        console.error("Fejl ved nulstilling af runde:", error);
+    }
 })
 
 nytSpil.addEventListener("click", async function() {
-    for (let v of resultatFelter) {
-        v.disabled = false
-        v.value = ""
-    }
-
-    let sumFelt = document.querySelector('#sum')
-    sumFelt.value = ""
-    let bonusFelt = document.querySelector('#bonus')
-    bonusFelt.value = ""
-    let totalFelt = document.querySelector('#total')
-    totalFelt.value = ""
-    for (let cb of checkbox) {
-        cb.checked = false
-        cb.disabled = true;
-    }
-        for (let t of terninger) {
-        t.src = "images/dice1.png"
-    }
-
     try {
         await post("http://" + serverIP + "/newGame", {}) // sender en anmodning til serveren om at starte et nyt spil
         slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
+        await opdaterSpillerListe();
+
+        for (let v of resultatFelter) {
+            v.disabled = false
+            v.value = ""
+        }
+        for (let cb of checkbox) {
+            cb.checked = false
+            cb.disabled = true;
+        }
+        for (let t of terninger) {
+            t.src = "images/dice1.png"
+        }
+
+        let sumFelt = document.querySelector('#sum')
+        sumFelt.value = ""
+
+        let bonusFelt = document.querySelector('#bonus')
+        bonusFelt.value = ""
+        
+        let totalFelt = document.querySelector('#total')
+        totalFelt.value = ""
+
     } catch (error) {
         console.error("Fejl ved nulstilling af spil:", error);
     }
 })
+
+async function saveSession() {
+    let players = await getPlayers();
+    
+}
