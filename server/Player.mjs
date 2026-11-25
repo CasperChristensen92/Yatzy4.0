@@ -31,6 +31,7 @@ function createPlayer(navn) {
         "counter" : 3,
         "dices" : [],
         "oldResults" : [],
+        "roundLock" : false,
         "wins" : 0
     };
     return newPlayer;

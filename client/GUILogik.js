@@ -129,68 +129,72 @@ slåKnap.addEventListener("click", async function () {
 
 let resultatFelter = document.querySelectorAll('.labelText input')
 
-
 for (let r of resultatFelter) {
     r.addEventListener("click", async function () {
-        await put(`http://${serverIP}/result/${r.id}`, {
-            låst: true }
-        )
-        r.disabled = true
-        await opdaterResults();
-        await opdaterSpillerListe();
-    })
+        try{
+            await put(`http://${serverIP}/result/${r.id}`, { låst: true }); // låser feltet for player object
+            r.disabled = true // låser feltet i GUI
+            await opdaterResults();
+            await opdaterSpillerListe();
+
+        } catch(error){
+            r.disabled = false;
+            console.error("Fejl ved låsning af felt:", error);
+        }
+    });
 }
 
 
 nyRunde.addEventListener("click", async function () {
-    for (let t of terninger) {
-        t.src = "images/dice1.png"
-    }
-    for (let cb of checkbox) {
-        cb.checked = false
-    }
-    for (let r of resultatFelter) {
-        if (!r.disabled) {
-            r.value = ""
-        }
-    }
-    
     try {
         await post("http://" + serverIP + "/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
-            slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
-            await opdaterResults();
-            await opdaterSpillerListe();
-        } catch (error) {
-            console.error("Fejl ved nulstilling af runde:", error);
+
+        for (let t of terninger) {
+            t.src = "images/dice1.png"
         }
+        for (let cb of checkbox) {
+            cb.checked = false
+        }
+        for (let r of resultatFelter) {
+            if (!r.disabled) {
+                r.value = ""
+            }
+        }            
+        slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
+        await opdaterResults();
+        await opdaterSpillerListe();
+    } 
+    catch (error) {
+        console.error("Fejl ved nulstilling af runde:", error);
+    }
 })
 
 nytSpil.addEventListener("click", async function() {
-    for (let v of resultatFelter) {
-        v.disabled = false
-        v.value = ""
-    }
-
-    let sumFelt = document.querySelector('#sum')
-    sumFelt.value = ""
-    let bonusFelt = document.querySelector('#bonus')
-    bonusFelt.value = ""
-    let totalFelt = document.querySelector('#total')
-    totalFelt.value = ""
-    for (let cb of checkbox) {
-        cb.checked = false
-    }
-        for (let t of terninger) {
-        t.src = "images/dice1.png"
-    }
-
-
-
-
     try {
         await post("http://" + serverIP + "/newGame", {}) // sender en anmodning til serveren om at starte et nyt spil
         slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
         await opdaterSpillerListe();
+
+        for (let v of resultatFelter) {
+            v.disabled = false
+            v.value = ""
+        }
+        for (let cb of checkbox) {
+            cb.checked = false
+        }
+        for (let t of terninger) {
+            t.src = "images/dice1.png"
+        }
+
+        let sumFelt = document.querySelector('#sum')
+        sumFelt.value = ""
+
+        let bonusFelt = document.querySelector('#bonus')
+        bonusFelt.value = ""
+        
+        let totalFelt = document.querySelector('#total')
+        totalFelt.value = ""
+
     } catch (error) {
         console.error("Fejl ved nulstilling af spil:", error);
     }
