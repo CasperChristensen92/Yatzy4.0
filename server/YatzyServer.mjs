@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 
 
 import { rollDice, resetCounter, nulstilValues } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
-import { saveResult,createPlayer } from './Player.mjs'
+import { saveResult, createPlayer, finishedCheck } from './Player.mjs'
 
 const app = express();
 
@@ -105,7 +105,7 @@ app.post('/join', (request, response) => {
 
     request.session.playerName = name;
     // Opretter en ny spiller med et nyt result objekt, som gemmes i players arrayet
-    
+
 
     request.session.save((err) => {
         if (err) {
@@ -149,13 +149,13 @@ app.post('/api/game/start', (request, response) => {
 
     resetGameData();
     gameStatus = 'playing'; // spil-status ændres, så nye spillere ikke kan joine
-    
-    response.json({status: gameStatus}); // returnerer spil-status (status skal tjekkes før vi kan starte et spil)
+
+    response.json({ status: gameStatus }); // returnerer spil-status (status skal tjekkes før vi kan starte et spil)
 });
 
 
 app.get('/game', (request, response) => {
-    
+
     if (gameStatus !== 'playing' || !players.has(request.sessionID)) {
         return response.redirect('/')
     }
@@ -164,53 +164,70 @@ app.get('/game', (request, response) => {
 });
 
 app.get('/players', (request, response) => {
-    response.json( [...players.values()]);
+    response.json([...players.values()]);
 })
 
 
-app.get('/result', async(request, response) => {
+app.get('/result', async (request, response) => {
     let player = players.get(request.sessionID)
     if (!player) {
-        return response.status(401).json({error: 'Ingen spiller fundet'})
+        return response.status(401).json({ error: 'Ingen spiller fundet' })
     }
     response.json(player.result)
 })
 
-app.post('/rollDice', (request,response) =>{
+app.post('/rollDice', (request, response) => {
     let player = players.get(request.sessionID)
     if (!player) {
-        return response.status(401).json({error: 'Ingen spiller fundet'})
+        return response.status(401).json({ error: 'Ingen spiller fundet' })
     }
     let lockedDice = request.body; // modtager listen med de låste terninger fra klienten
     rollDice(lockedDice, player) // sender listen til rollDice funktionen, som ruller de terninger der ikke er låst;
-    response.status(201).json({ 
+    response.status(201).json({
         newDices: player.dices,
         newCounter: player.counter,
         result: player.result
     });
-    
+
 });
 
 app.post('/newRound', (request, response) => {
     let player = players.get(request.sessionID)
     if (!player) {
-        return response.status(401).json({error: 'Ingen spiller fundet'})
+        return response.status(401).json({ error: 'Ingen spiller fundet' })
     }
     resetCounter(player); // Reset counteren til 3 for en ny runde
     nulstilValues(player);
     player.dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
-    response.status(201).json({ 
+    response.status(201).json({
         message: "Runde nulstillet på serveren"
     });
 });
 
 app.post('/newGame', (request, response) => {
+    let winner;
+    let winnerResult = 0
     for (let player of players.values()) {
-        saveResult(player); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
+        if (finishedCheck(player)) {
+            if (winner == null) {
+                winner = player
+            }
+            if (player.result.total.value > winnerResult) {
+                winner = player
+                winnerResult = player.result.total.value
+            }
+            if (player.result.total.value > player.highscore) {
+                player.highscore = player.result.total.value
+            }
+            saveResult(player); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet'
+        }
         player.dices.length = 0;
         resetCounter(player) // Tømmer dices-arrayet for at starte en ny runde
     }
-    response.status(201).json({ 
+    if (winner != null) {
+        winner.wins += 1;
+    }
+    response.status(201).json({
         message: "Nyt spil startet på serveren"
     });
 });
@@ -220,7 +237,7 @@ app.put('/result/:felt', (request, response) => {
     let body = request.body
     let player = players.get(request.sessionID)
     if (!player) {
-        return response.status(401).json({error: 'Ingen spiller fundet'})
+        return response.status(401).json({ error: 'Ingen spiller fundet' })
     }
     player.result[felt].locked = body.låst; //.låst tilgår værdien i body der hedder låst, altså true
     response.json(player.result)

@@ -184,6 +184,9 @@ nytSpil.addEventListener("click", async function() {
         t.src = "images/dice1.png"
     }
 
+
+
+
     try {
         await post("http://" + serverIP + "/newGame", {}) // sender en anmodning til serveren om at starte et nyt spil
         slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
@@ -192,3 +195,8 @@ nytSpil.addEventListener("click", async function() {
         console.error("Fejl ved nulstilling af spil:", error);
     }
 })
+
+async function saveSession() {
+    let players = await getPlayers();
+    
+}
