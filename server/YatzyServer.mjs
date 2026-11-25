@@ -41,13 +41,13 @@ const players = new Map(); // spillere gemmes med session-ID og player som key o
 
 let gameStatus = 'lobby';
 
-const scoreFields = [
+const scoreFields = [ // Array der bruges til at tælle brugte felter til visning på scoreboard
     'etere', 'toere', 'treere', 'firere', 'femere', 'seksere',
     'etPar', 'toPar', 'treEns', 'fireEns', 'lilleStraight',
     'storeStraight', 'fuldtHus', 'chance', 'yatzy'
 ];
 
-// Ændrer
+// returnerer et scoreboard til visning på forsiden
 function getScoreboard() {
     return [...players.values()].map(player => {
         const playerResult = player.result;
@@ -61,7 +61,7 @@ function getScoreboard() {
     });
 }
 
-function resetGameData() {
+function resetGameData() { // Nulstiller spil-data, når et nyt spil startes, virker måske
 
     for (const player of players.values()) {
         const newPlayer = createPlayer(player.name);
@@ -160,7 +160,7 @@ app.get('/game', (request, response) => {
         return response.redirect('/')
     }
 
-    response.sendFile(path.join(projectRoot, 'client', 'GUI.html')); // Sender spilleren til GUI-htmæ (spil-siden)
+    response.sendFile(path.join(projectRoot, 'client', 'GUI.html')); // Sender spilleren til GUI-html (spil-siden)
 });
 
 
