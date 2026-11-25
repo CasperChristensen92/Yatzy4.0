@@ -39,12 +39,46 @@ app.use(session({
 
 const players = new Map(); // spillere gemmes med session-ID og player som key og value
 
+let gameStatus = 'lobby';
+
+const scoreFields = [ // Array der bruges til at tælle brugte felter til visning på scoreboard
+    'etere', 'toere', 'treere', 'firere', 'femere', 'seksere',
+    'etPar', 'toPar', 'treEns', 'fireEns', 'lilleStraight',
+    'storeStraight', 'fuldtHus', 'chance', 'yatzy'
+];
+
+// returnerer et scoreboard til visning på forsiden
+function getScoreboard() {
+    return [...players.values()].map(player => {
+        const playerResult = player.result;
+
+        return {
+            name: player.name,
+            total: player.result.total.value,
+            completedCategories: scoreFields.filter(field => player.result[field].locked).length
+        };
+
+    });
+}
+
+function resetGameData() { // Nulstiller spil-data, når et nyt spil startes, virker måske
+
+    for (const player of players.values()) {
+        const newPlayer = createPlayer(player.name);
+
+        player.result = newPlayer.result;
+        player.dices = newPlayer.dices;
+        player.counter = newPlayer.counter;
+    }
+}
+
 
 // Når en bruger besøger forsiden. Forsiden er skrevet i .pug, så den skal renders til html
 app.get('/', (request, response) => {
     response.render('forside', {
-        players: [...players.values()], // Pug får listen af spillere
-        currentPlayer: request.session.playerName // Henter navn på aktuel spiller, fra spillerens session, hvis den allerede findes
+        status: gameStatus,
+        players: getScoreboard(), // Pug får listen af spillere
+        currentPlayer: players.get(request.sessionID)?.name ?? null // Henter navn på aktuel spiller, fra spillerens session, hvis den allerede findes
     });
 
 });
@@ -52,33 +86,81 @@ app.get('/', (request, response) => {
 
 // Modtager spillerens navn fra forsiden. Navnet gemmes i sessionen og tilføjes til listen
 app.post('/join', (request, response) => {
+
+    if (gameStatus !== 'lobby') {
+        return response.status(409).send('Spillet er allerede i gang. Vent på næste spil.');
+    }
+
+    if (players.has(request.sessionID)) {
+        return response.redirect('/');
+    }
+
     const name = String(request.body.name ?? '').trim();
 
     if (name.length === 0 || name.length > 30) {
         return response.status(400).send('Ugyldigt navn');
     }
 
+    const player = createPlayer(name)
+
     request.session.playerName = name;
-    let player = createPlayer(name)
-    players.set(request.sessionID, player)
-// Opretter en ny spiller med et nyt result objekt, som gemmes i players arrayet
+    // Opretter en ny spiller med et nyt result objekt, som gemmes i players arrayet
     
+
     request.session.save((err) => {
         if (err) {
-            return response.status(500).send('Sessionen kunne ikke gemmes')
+            return response.status(500).send('Sessionen kunne ikke gemmes');
         }
-        response.redirect('/game'); // Spilleren sendes videre til spil-siden
+
+        players.set(request.sessionID, player)
+
+        response.redirect('/'); // Spilleren sendes videre til spil-siden
     });
-
-
 });
 
-app.get('/game', (request, response) => {
-    if (!request.session.playerName) {
-        return response.redirect('/');
+app.get('/api/game/status', (request, response) => { // Bruges til at sende spil-status
+    response.json({
+        status: gameStatus,
+        currentPlayer: players.get(request.sessionID)?.name ?? null,
+        isParticipant: players.has(request.sessionID)
+    });
+});
+
+app.get('/api/scoreboard', (request, response) => {
+    response.json({
+        status: gameStatus,
+        players: getScoreboard()
+    });
+});
+
+app.post('/api/game/start', (request, response) => {
+
+    if (!players.has(request.sessionID)) {
+        return response.status(401).json({
+            error: 'Du skal være tilmeldt'
+        });
     }
 
-    response.sendFile(path.join(projectRoot, 'client', 'GUI.html'));
+    if (gameStatus !== 'lobby') {
+        return response.status(409).json({
+            error: 'Spillet er allerede startet'
+        });
+    }
+
+    resetGameData();
+    gameStatus = 'playing'; // spil-status ændres, så nye spillere ikke kan joine
+    
+    response.json({status: gameStatus}); // returnerer spil-status (status skal tjekkes før vi kan starte et spil)
+});
+
+
+app.get('/game', (request, response) => {
+    
+    if (gameStatus !== 'playing' || !players.has(request.sessionID)) {
+        return response.redirect('/')
+    }
+
+    response.sendFile(path.join(projectRoot, 'client', 'GUI.html')); // Sender spilleren til GUI-html (spil-siden)
 });
 
 
