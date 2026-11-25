@@ -37,8 +37,28 @@ opdaterResults()
 
 async function opdaterSomeResults() {
     let result = await getResult();
+    /*
     document.querySelector('#sum').value = result.sum.value
     document.querySelector('#bonus').value = result.bonus.value
+    document.querySelector('#total').value = result.total.value
+    */
+    document.querySelector('#etere').value = result.etere.value
+    document.querySelector('#toere').value = result.toere.value
+    document.querySelector('#treere').value = result.treere.value
+    document.querySelector('#firere').value = result.firere.value
+    document.querySelector('#femere').value = result.femere.value
+    document.querySelector('#seksere').value = result.seksere.value
+    document.querySelector('#sum').value = result.sum.value
+    document.querySelector('#bonus').value = result.bonus.value
+    document.querySelector('#etPar').value = result.etPar.value
+    document.querySelector('#toPar').value = result.toPar.value
+    document.querySelector('#treEns').value = result.treEns.value
+    document.querySelector('#fireEns').value = result.fireEns.value
+    document.querySelector('#lilleStraight').value = result.lilleStraight.value
+    document.querySelector('#storeStraight').value = result.storeStraight.value
+    document.querySelector('#fuldtHus').value = result.fuldtHus.value
+    document.querySelector('#chance').value = result.chance.value
+    document.querySelector('#yatzy').value = result.yatzy.value
     document.querySelector('#total').value = result.total.value
 }
 
