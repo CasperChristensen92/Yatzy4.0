@@ -35,6 +35,12 @@ document.querySelector('#total').value = result.total.value
 }
 opdaterResults()
 
+async function opdaterSomeResults() {
+    let result = await getResult();
+    document.querySelector('#sum').value = result.sum.value
+    document.querySelector('#bonus').value = result.bonus.value
+    document.querySelector('#total').value = result.total.value
+}
 
 async function post(url, objekt) {
     const respons = await fetch(url, {
@@ -109,7 +115,7 @@ nyRunde.addEventListener("click", async function () {
     try {
         await post("http://" + serverIP + "/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
             slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
-            await opdaterResults();
+            await opdaterSomeResults();
         } catch (error) {
             console.error("Fejl ved nulstilling af runde:", error);
         }

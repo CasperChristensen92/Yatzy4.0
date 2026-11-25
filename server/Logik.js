@@ -34,6 +34,16 @@ function opdaterValues(player) {
             result[felt].value = scoreMethods[felt](player)
         }
     }
+    /*let selectedUpperScores = [result.etere, result.toere, result.treere, result.firere, result.femere, result.seksere].filter(v => v.locked==true).map(v => parseInt(v.value))
+    let selectedLowerScores = [result.etPar, result.toPar, result.treEns, result.fireEns, result.lilleStraight, result.storeStraight, result.fuldtHus, result.chance, result.yatzy].filter(v => v.locked==true).map(v => parseInt(v.value))
+
+    result.sum.value = sumScore(selectedUpperScores)
+    result.bonus.value = bonusScore(selectedUpperScores)
+    result.total.value = totalScore(selectedUpperScores, selectedLowerScores)*/
+}
+
+function opdaterTotalValues(player){
+    let result = player.result;
     let selectedUpperScores = [result.etere, result.toere, result.treere, result.firere, result.femere, result.seksere].filter(v => v.locked==true).map(v => parseInt(v.value))
     let selectedLowerScores = [result.etPar, result.toPar, result.treEns, result.fireEns, result.lilleStraight, result.storeStraight, result.fuldtHus, result.chance, result.yatzy].filter(v => v.locked==true).map(v => parseInt(v.value))
 
@@ -65,6 +75,7 @@ function decreaseCounter(player) {
 
 function resetCounter(player) {
     player.counter = 3
+    opdaterTotalValues(player)
 }
 
 // Felterne 1-6 symboliserer hver sin terning. "Count" tæller hvor mange terninger der er af hver "størrelse"
