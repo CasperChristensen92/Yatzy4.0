@@ -35,6 +35,12 @@ document.querySelector('#total').value = result.total.value
 }
 opdaterResults()
 
+async function opdaterSomeResults() {
+    let result = await getResult();
+    document.querySelector('#sum').value = result.sum.value
+    document.querySelector('#bonus').value = result.bonus.value
+    document.querySelector('#total').value = result.total.value
+}
 
 async function post(url, objekt) {
     const respons = await fetch(url, {
@@ -70,15 +76,13 @@ slåKnap.addEventListener("click", async function () {
         for (let i = 0; i < terninger.length; i++) { // opdaterer billederne på klienten
             terninger[i].src = "images/dice" + rollResult.newDices[i] + ".png"
         }
-        opdaterResults()
+        await opdaterResults()
         //decreaseCounter() // skal nok flyttes til serveren, men for nu er det her
         //opdaterValues() // skal nok flyttes til serveren, men for nu er det her
     } catch (error) {
         console.error("Fejl ved rulning af terninger:", error);
     }
 });
-
-
 
 
 let resultatFelter = document.querySelectorAll('.labelText input')
@@ -90,6 +94,7 @@ for (let r of resultatFelter) {
             låst: true }
         )
         r.disabled = true
+        await opdaterResults();
     })
 }
 
@@ -110,7 +115,7 @@ nyRunde.addEventListener("click", async function () {
     try {
         await post("http://" + serverIP + "/newRound", {}) // sender en anmodning til serveren om at starte en ny runde
             slagTilbage.innerHTML = "Slag tilbage: 3"; // opdaterer counteren på klienten
-            await opdaterResults();
+            await opdaterSomeResults();
         } catch (error) {
             console.error("Fejl ved nulstilling af runde:", error);
         }
