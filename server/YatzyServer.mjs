@@ -205,12 +205,33 @@ app.post('/newRound', (request, response) => {
 });
 
 app.post('/newGame', (request, response) => {
+    let winner;
+    let winnerResult = 0
     for (let player of players.values()) {
         saveResult(player); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
+        player.dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
+        setRoundLock(player, false); // Fjerner runde-låsen
+        resetCounter(player); // Reset counteren til 3 for en ny runde
+        if (finishedCheck(player)) {
+            if (winner == null) {
+                winner = player
+            }
+            if (player.result.total.value > winnerResult) {
+                winner = player
+                winnerResult = player.result.total.value
+            }
+            if (player.result.total.value > player.highscore) {
+                player.highscore = player.result.total.value
+            }
+            saveResult(player); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet'
+        }
         player.dices.length = 0;
         resetCounter(player) // Tømmer dices-arrayet for at starte en ny runde
     }
-    response.status(201).json({ 
+    if (winner != null) {
+        winner.wins += 1;
+    }
+    response.status(201).json({
         message: "Nyt spil startet på serveren"
     });
 });
