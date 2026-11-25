@@ -94,3 +94,16 @@ body {
 .yatzyTotal button {
     margin-right: auto;
 }
+.gameContainer {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.game {
+    flex: 1;
+}
+
+.scoreboard {
+    width: 300px;
+}
