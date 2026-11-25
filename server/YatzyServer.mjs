@@ -7,8 +7,8 @@ import { fileURLToPath } from 'url';
 
 
 
-import { rollDice, resetCounter, nulstilValues, setLockedFalse } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
-import { saveResult,createPlayer } from './Player.mjs'
+import { rollDice, resetCounter, nulstilValues, setLockedFalse,setRoundLock } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
+import { saveResult,createPlayer, player } from './Player.mjs'
 
 const app = express();
 
@@ -95,6 +95,10 @@ app.post('/rollDice', (request,response) =>{
     if (!player) {
         return response.status(401).json({error: 'Ingen spiller fundet'})
     }
+    if (player.roundLock) {
+        return response.status(403).json({error: 'Runden er låst, terninger kan ikke rulles'})
+    }
+
     let lockedDice = request.body; // modtager listen med de låste terninger fra klienten
     rollDice(lockedDice, player) // sender listen til rollDice funktionen, som ruller de terninger der ikke er låst;
     response.status(201).json({ 
@@ -110,19 +114,25 @@ app.post('/newRound', (request, response) => {
     if (!player) {
         return response.status(401).json({error: 'Ingen spiller fundet'})
     }
+    if (!player.roundLock) {
+        return response.status(403).json({error: 'Runden kan ikke nulstilles, da der mangles at låse et felt'})
+    }
+
+    setRoundLock(player, false); // Fjerner runde-låsen
     resetCounter(player); // Reset counteren til 3 for en ny runde
     nulstilValues(player);
     player.dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
-    response.status(201).json({ 
+    response.status(201).json({
         message: "Runde nulstillet på serveren"
     });
 });
 
 app.post('/newGame', (request, response) => {
-    resetCounter(); // Reset counteren til 3 for en ny runde
     for (let player of players.values()) {
         saveResult(player); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
         player.dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
+        setRoundLock(player, false); // Fjerner runde-låsen
+        resetCounter(player); // Reset counteren til 3 for en ny runde
     }
     response.status(201).json({ 
         message: "Nyt spil startet på serveren"
@@ -130,14 +140,19 @@ app.post('/newGame', (request, response) => {
 });
 
 app.put('/result/:felt', (request, response) => {
-    let felt = request.params.felt
-    let body = request.body
     let player = players.get(request.sessionID)
+    let body = request.body
+    let felt = request.params.felt
+ 
     if (!player) {
         return response.status(401).json({error: 'Ingen spiller fundet'})
     }
+    if(player.roundLock){
+        return response.status(403).json({error: 'Runden er låst, resultater kan ikke ændres'})
+    }
     player.result[felt].locked = body.låst; //.låst tilgår værdien i body der hedder låst, altså true
-    response.json(player.result)
+    setRoundLock(player, true); // Låser runden, så resultater ikke kan ændres
+    return response.status(200).json({message: `Feltet ${felt} er nu låst`})
 });
 
 app.listen(8080, () => console.log('Lytter på port 8080 ...'));

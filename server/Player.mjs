@@ -30,7 +30,8 @@ function createPlayer(navn) {
         "result" : createResult(),
         "counter" : 3,
         "dices" : [],
-        "oldResults" : []
+        "oldResults" : [],
+        "roundLock" : false
     };
     return newPlayer;
 }
