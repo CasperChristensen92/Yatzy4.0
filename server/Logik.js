@@ -10,12 +10,12 @@ import { result, player } from './Player.mjs'
 // }
 
 let scoreMethods = {
-    etere: () => upperSectionScore(1),
-    toere: () => upperSectionScore(2),
-    treere: () => upperSectionScore(3),
-    firere: () => upperSectionScore(4),
-    femere: () => upperSectionScore(5),
-    seksere: () => upperSectionScore(6),
+    etere : (player) => upperSectionScore(1, player),
+    toere: (player) => upperSectionScore(2, player),
+    treere: (player) => upperSectionScore(3, player),
+    firere: (player) => upperSectionScore(4, player),
+    femere: (player) => upperSectionScore(5, player),
+    seksere: (player) => upperSectionScore(6, player),
     etPar: onePairScore,
     toPar: twoPairScore,
     treEns: threeOfAKindScore,
@@ -31,7 +31,7 @@ function opdaterValues(player) {
     let result = player.result;
     for (let felt of Object.keys(scoreMethods)) {
         if (!result[felt].locked) {
-            result[felt].value = scoreMethods[felt]()
+            result[felt].value = scoreMethods[felt](player)
         }
     }
     let selectedUpperScores = [result.etere, result.toere, result.treere, result.firere, result.femere, result.seksere].filter(v => v.locked==true).map(v => parseInt(v.value))
@@ -78,8 +78,8 @@ function countEyes(player) {
     }
 
 
-function upperSectionScore(eye) {
-    let c = countEyes();
+function upperSectionScore(eye, player) {
+    let c = countEyes(player);
     return c[eye] * eye;
 }
 
@@ -101,16 +101,16 @@ function bonusScore(lockedUpperSectionScores) {
 
 
 // Starter med højeste tal (6). Hvis hvis der findes flere terninger, vælges den. 
-function onePairScore() {
-    let c = countEyes();
+function onePairScore(player) {
+    let c = countEyes(player);
     for (let i = 6; i >= 1; i--) {
         if (c[i] >= 2) return i * 2;
     }
     return 0;
 }
 
-function twoPairScore() {
-    let c = countEyes();
+function twoPairScore(player) {
+    let c = countEyes(player);
     let pairs = 0;
     let score = 0;
     for (let i = 6; i >= 1; i--) {
@@ -123,40 +123,40 @@ function twoPairScore() {
     return 0;
 }
 
-function threeOfAKindScore() {
-    let c = countEyes();
+function threeOfAKindScore(player) {
+    let c = countEyes(player);
     for (let i = 6; i >= 1; i--) {
         if (c[i] >= 3) return i * 3;
     }
     return 0;
 }
 
-function fourOfAKindScore() {
-    let c = countEyes();
+function fourOfAKindScore(player) {
+    let c = countEyes(player);
     for (let i = 6; i >= 1; i--) {
         if (c[i] >= 4) return i * 4;
     }
     return 0;
 }
 
-function smallStraightScore() {
-    let c = countEyes();
+function smallStraightScore(player) {
+    let c = countEyes(player);
     for (let i = 1; i <= 5; i++) {
         if (c[i] != 1) return 0;
     }
     return 15; // fast score
 }
 
-function largeStraightScore() {
-    let c = countEyes();
+function largeStraightScore(player) {
+    let c = countEyes(player);
     for (let i = 2; i <= 6; i++) {
         if (c[i] != 1) return 0;
     }
     return 20; // fast score
 }
 
-function fullHouseScore() {
-    let c = countEyes();
+function fullHouseScore(player) {
+    let c = countEyes(player);
     let three = 0, two = 0;
     for (let i = 1; i <= 6; i++) {
         if (c[i] == 3) three = i * 3;
@@ -165,15 +165,17 @@ function fullHouseScore() {
     return (three > 0 && two > 0) ? three + two : 0;
 }
 
-function chanceScore() {
+function chanceScore(player) {
     let sum = 0;
-    for (let d of dices) sum += d;
+    for (let d of player.dices) sum += d;
     return sum;
 }
 
-function yatzyScore() {
-    let first = dices[0];
-    for (let d of dices) {
+function yatzyScore(player) {
+    if (player.dices.length !== 5) return 0;
+
+    let first = player.dices[0];
+    for (let d of player.dices) {
         if (d != first) return 0;
     }
     return 50;
@@ -189,7 +191,7 @@ function rollDice(lockedDice, player) {
         for (let i = 0; i < 5; i++) {
             if (!lockedDice[i]) {
                 let slag = Math.floor(Math.random() * 6) + 1;
-                dices[i] = slag;
+                player.dices[i] = slag;
             }
         }
     decreaseCounter(player)

@@ -5,6 +5,7 @@ html(lang="da")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Yatzy - Forside
         link(rel="stylesheet", href="/forside.css")
+        script(src="/forside.js", defer)
 
     body 
         main.forside
@@ -35,8 +36,6 @@ html(lang="da")
                 p Du kan tilmelde dig, når spillet er færdigt.
 
 
-            p#lobby-message(role="status")
-
             h2 Scoreboard
 
             table.scoreboard
@@ -50,7 +49,7 @@ html(lang="da")
                         tr
                             td= player.name
                             td= player.total
-                            td= player.completedCategories
+                            td= player.completedCategories + "/15"
 
             p#empty-scoreboard(hidden=players.length > 0) Der er ingen tilmeldte spillere.
 

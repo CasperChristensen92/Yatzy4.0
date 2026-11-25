@@ -44,7 +44,7 @@ let gameStatus = 'lobby';
 const scoreFields = [
     'etere', 'toere', 'treere', 'firere', 'femere', 'seksere',
     'etPar', 'toPar', 'treEns', 'fireEns', 'lilleStraight',
-    'storStraight', 'fuldtHus', 'chance', 'yatzy'
+    'storeStraight', 'fuldtHus', 'chance', 'yatzy'
 ];
 
 // Ændrer
@@ -54,22 +54,21 @@ function getScoreboard() {
 
         return {
             name: player.name,
-            total: playerResult?.total?.value ?? null,
-            completedCategories: playerResult
-                ? scoreFields.filter(felt => playerResult[felt]?.locked).length
-                : null
+            total: player.result.total.value,
+            completedCategories: scoreFields.filter(field => player.result[field].locked).length
         };
 
     });
 }
 
 function resetGameData() {
-    resetCounter();
-    dices.length = 0;
 
-    for (const felt of Object.values(result)) {
-        felt.value = 0;
-        felt.locked = false;
+    for (const player of players.values()) {
+        const newPlayer = createPlayer(player.name);
+
+        player.result = newPlayer.result;
+        player.dices = newPlayer.dices;
+        player.counter = newPlayer.counter;
     }
 }
 
@@ -102,27 +101,66 @@ app.post('/join', (request, response) => {
         return response.status(400).send('Ugyldigt navn');
     }
 
+    const player = createPlayer(name)
+
     request.session.playerName = name;
-    let player = createPlayer(name)
-    players.set(request.sessionID, player)
-// Opretter en ny spiller med et nyt result objekt, som gemmes i players arrayet
+    // Opretter en ny spiller med et nyt result objekt, som gemmes i players arrayet
     
+
     request.session.save((err) => {
         if (err) {
-            return response.status(500).send('Sessionen kunne ikke gemmes')
+            return response.status(500).send('Sessionen kunne ikke gemmes');
         }
+
+        players.set(request.sessionID, player)
+
         response.redirect('/'); // Spilleren sendes videre til spil-siden
     });
-
-
 });
 
-app.get('/game', (request, response) => {
-    if (!request.session.playerName) {
-        return response.redirect('/');
+app.get('/api/game/status', (request, response) => { // Bruges til at sende spil-status
+    response.json({
+        status: gameStatus,
+        currentPlayer: players.get(request.sessionID)?.name ?? null,
+        isParticipant: players.has(request.sessionID)
+    });
+});
+
+app.get('/api/scoreboard', (request, response) => {
+    response.json({
+        status: gameStatus,
+        players: getScoreboard()
+    });
+});
+
+app.post('/api/game/start', (request, response) => {
+
+    if (!players.has(request.sessionID)) {
+        return response.status(401).json({
+            error: 'Du skal være tilmeldt'
+        });
     }
 
-    response.sendFile(path.join(projectRoot, 'client', 'GUI.html'));
+    if (gameStatus !== 'lobby') {
+        return response.status(409).json({
+            error: 'Spillet er allerede startet'
+        });
+    }
+
+    resetGameData();
+    gameStatus = 'playing'; // spil-status ændres, så nye spillere ikke kan joine
+    
+    response.json({status: gameStatus}); // returnerer spil-status (status skal tjekkes før vi kan starte et spil)
+});
+
+
+app.get('/game', (request, response) => {
+    
+    if (gameStatus !== 'playing' || !players.has(request.sessionID)) {
+        return response.redirect('/')
+    }
+
+    response.sendFile(path.join(projectRoot, 'client', 'GUI.html')); // Sender spilleren til GUI-htmæ (spil-siden)
 });
 
 
@@ -163,10 +201,12 @@ app.post('/newRound', (request, response) => {
 });
 
 app.post('/newGame', (request, response) => {
-    resetCounter(); // Reset counteren til 3 for en ny runde
+    
+    
     for (let player of players.values()) {
         saveResult(player); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet
         player.dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
+        resetCounter(player); // Reset counteren til 3 for en ny runde
     }
     response.status(201).json({ 
         message: "Nyt spil startet på serveren"
