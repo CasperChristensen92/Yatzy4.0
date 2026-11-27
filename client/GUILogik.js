@@ -33,6 +33,7 @@ async function opdaterSpillerListe() {
 }
 opdaterSpillerListe();
 setInterval(opdaterSpillerListe, 2000);
+setInterval(checkGameStatus, 2000);
 
 async function opdaterResults() {
 let result = await getResult();
@@ -104,6 +105,14 @@ async function put(url, objekt) {
     if (respons.status !== 200) // Created
         throw new Error(respons.status);
     return await respons.json();
+}
+
+async function checkGameStatus() {
+    const response = await fetch('/api/game/status');
+    const game = await response.json();
+    if (game.status = 'lobby') {
+        window.location.href = "/"
+    }
 }
 
 slåKnap.addEventListener("click", async function () {
@@ -203,6 +212,8 @@ nytSpil.addEventListener("click", async function() {
         
         let totalFelt = document.querySelector('#total')
         totalFelt.value = ""
+
+        checkGameStatus();
 
     } catch (error) {
         console.error("Fejl ved nulstilling af spil:", error);
