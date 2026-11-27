@@ -10,7 +10,7 @@ async function startGame() {
 
     try {
         // Sender post-request til Express-serveren. Vi modtager en game-status
-        const response = await fetch('api/game/start', {
+        const response = await fetch('/api/game/start', {
             method: 'POST'
         });
 
@@ -69,3 +69,56 @@ updateGameStatus();
 
 
 setInterval(updateGameStatus, 3000); // Kaldes med 3 sekunders mellemrum
+
+
+const scoreboardBody = document.querySelector('#scoreboard-body')
+const emptyScoreboard = document.querySelector('#empty-scoreboard')
+
+
+
+async function updateScoreboard() {
+    try {
+        const response = await fetch ('/api/scoreboard', {
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            throw new Error ('Kunne ikke hente scoreboard');
+        }
+
+        const data = await response.json();
+
+        const players = [...data.players].sort(
+            (a, b) => b.total - a.total
+        );
+
+        const rows = players.map(player => {
+            const row = document.createElement('tr');
+
+            const name = document.createElement('td');
+            const points = document.createElement('td');
+            const fields = document.createElement('td');
+
+            name.textContent = player.name;
+            points.textContent = player.total ?? '-';
+
+            fields.textContent = player.completedCategories == null ? '-' : `${player.completedCategories}/15`;
+
+            row.append(name, points, fields);
+
+            return row;
+        });
+
+
+        scoreboardBody.replaceChildren(...rows);
+
+        emptyScoreboard.hidden = players.length > 0;
+
+    } catch (error) {
+        console.error('Fejl ved opdatering af scoreboard', error);
+    }
+}
+
+updateScoreboard();
+
+setInterval(updateScoreboard, 3000);
