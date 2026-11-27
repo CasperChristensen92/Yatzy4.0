@@ -107,3 +107,12 @@ body {
 .scoreboard {
     width: 300px;
 }
+.highscore {
+    width: 300px;
+}
+
+.allScoreboards {
+    display: flex;
+    gap: 40px;
+    flex-direction: row;
+}

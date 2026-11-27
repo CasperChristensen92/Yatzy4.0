@@ -41,5 +41,14 @@ li {
 }
 
 .scoreboard {
-    /* Senere */
+    width: 220px;
+}
+.highscore {
+    width: 220px;
+}
+
+.allScoreboards {
+    display: flex;
+    gap: 40px;
+    flex-direction: row;
 }

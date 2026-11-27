@@ -35,23 +35,40 @@ html(lang="da")
             else 
                 p Du kan tilmelde dig, når spillet er færdigt.
 
+            div.allScoreboards
 
-            h2 Scoreboard
+                div
+                    h2 Scoreboard
 
-            table.scoreboard
-                thead
-                    tr
-                        th Spiller 
-                        th Point 
-                        th Felter
-                tbody#scoreboard-body 
-                    each player in players 
-                        tr
-                            td= player.name
-                            td= player.total
-                            td= player.completedCategories + "/15"
+                    table.scoreboard(border="1")
+                        thead
+                            tr
+                                th Spiller
+                                th Point
+                                th Felter
+                        tbody#scoreboard-body 
+                            each player in players 
+                                tr
+                                    td= player.name
+                                    td= player.total
+                                    td= player.completedCategories + "/15"
 
-            p#empty-scoreboard(hidden=players.length > 0) Der er ingen tilmeldte spillere.
+                    p#empty-scoreboard(hidden=players.length > 0) Der er ingen tilmeldte spillere.
+                div
+                    h2 Highscores 
+
+                    table.highscore(border="1")
+                        thead 
+                            tr 
+                                th Spiller
+                                th Point
+                                th Wins
+                        tbody#highscore-body 
+                            //- each player in allPlayers
+                            //-     tr 
+                            //-         td= player.name 
+                            //-         td= player.total 
+                            //-         td= player.wins
 
 
             
