@@ -7,8 +7,8 @@ function createResult() {
     "firere" : {"value" :0, "locked" : false },
     "femere" : {"value" :0, "locked" : false },
     "seksere" : {"value" :0, "locked" : false },
-    "sum" : {"value" :0, "locked" : false },
-    "bonus" : {"value" :0, "locked" : false },
+    "sum" : {"value" :0, "locked" : true },
+    "bonus" : {"value" :0, "locked" : true },
     "etPar" : {"value" :0, "locked" : false },
     "toPar" : {"value" :0, "locked" : false },
     "treEns" : {"value" :0, "locked" : false },
@@ -18,7 +18,7 @@ function createResult() {
     "fuldtHus" : {"value" :0, "locked" : false },
     "chance" : {"value" :0, "locked" : false },
     "yatzy" : {"value" :0, "locked" : false },
-    "total" : {"value" :0, "locked" : false }
+    "total" : {"value" :0, "locked" : true }
     };
 }
 let result = createResult()
@@ -34,6 +34,7 @@ function createPlayer(navn) {
         "roundLock" : false,
         "wins" : 0
     };
+    
     return newPlayer;
 }
 

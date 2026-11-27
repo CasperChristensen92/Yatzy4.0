@@ -5,7 +5,6 @@ import session from 'express-session'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import path from 'path';
 
 
 import { rollDice, resetCounter, nulstilValues, setRoundLock } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
@@ -50,24 +49,24 @@ const scoreFields = [ // Array der bruges til at tælle brugte felter til visnin
 //Gemmer stien til filen med gemte spillere. Smart fordi vi kan gemme det i projektet
 let savedPlayersPath = path.join(projectRoot,'savedPlayers.json')
 //Opretter filen hvis den ikke findes '[]' fordi vi gerne vil gemme en samling af json objecter.
-//Vi bruger ikke Sync ved writefile og readfile, da de ikke bruges med det samme.
 if (!fs.existsSync(savedPlayersPath)) {
-    fs.writeFile(savedPlayersPath, '[]', 'utf8');
+    fs.writeFileSync(savedPlayersPath, '[]', 'utf8');
 }
 let savedPlayers = JSON.parse(
-    fs.readFile(savedPlayersPath, 'utf8')
+    fs.readFileSync(savedPlayersPath, 'utf8')
 );
 
 // gemmer spilleren til JSON-filen. Overwriter hvis spilleren allerede findes.
-function savePlayer(player){
-    if (player.name == ){
-
-    }
-    for (savedPlayer in savedPlayers){
+function savePlayer(player, win){
+    for (const savedPlayer of savedPlayers){
         if (player.name == savedPlayer.name){
+            if (player.highscore > savedPlayer.highscore){
             savedPlayer.highscore = player.highscore;
-            savedPlayer.wins = player.wins;
-            fs.writeFile(savedPlayersPath,JSON.stringify(savedPlayers,null,2),'utf-8');
+            }
+            if (win){
+            savedPlayer.wins+=1;
+            }
+            fs.writeFileSync(savedPlayersPath,JSON.stringify(savedPlayers,null,2),'utf-8');
             return;
         }
     }
@@ -77,7 +76,7 @@ function savePlayer(player){
         "wins" : player.wins
     };
     savedPlayers.push(newPlayer);
-    fs.writeFile(savedPlayersPath,JSON.stringify(savedPlayers,null,2),'utf-8');
+    fs.writeFileSync(savedPlayersPath,JSON.stringify(savedPlayers,null,2),'utf-8');
 }
 
 // returnerer et scoreboard til visning på forsiden
@@ -245,18 +244,17 @@ app.post('/newRound', (request, response) => {
     });
 });
 
-function savePlayersToJson(){
-    
-}
-
 app.post('/newGame', (request, response) => {
     let winner;
-    let winnerResult = 0
+    let win = false
+    let winnerResult = 0;
+    let finishedPlayers = [];
     for (let player of players.values()) {
         player.dices.length = 0; // Tømmer dices-arrayet for at starte en ny runde
         setRoundLock(player, false); // Fjerner runde-låsen
         resetCounter(player); // Reset counteren til 3 for en ny runde
         if (finishedCheck(player)) {
+            finishedPlayers.push(player)
             if (winner == null) {
                 winner = player
             }
@@ -269,11 +267,16 @@ app.post('/newGame', (request, response) => {
             }
             saveResult(player); // Gemmer det nuværende result objekt i player.oldResults arrayet og resetter result objektet'
         }
+
         player.dices.length = 0;
         resetCounter(player) // Tømmer dices-arrayet for at starte en ny runde
     }
-    if (winner != null) {
-        winner.wins += 1;
+    for (let player of finishedPlayers){
+        if (player === winner){
+            win = true;
+        }
+        savePlayer(player,win)
+        win = false
     }
     gameStatus = 'lobby'
     response.status(201).json({
