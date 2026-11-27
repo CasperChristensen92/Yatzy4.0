@@ -4,7 +4,8 @@ import pug from 'pug';
 import session from 'express-session'
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import fs from 'fs';
+import path from 'path';
 
 
 import { rollDice, resetCounter, nulstilValues, setRoundLock } from './Logik.js'; // Importer rollDice-funktionen, dices-arrayet og counter-variablen fra Logik.js
@@ -36,7 +37,6 @@ app.use(session({
 }));
 
 
-
 const players = new Map(); // spillere gemmes med session-ID og player som key og value
 
 let gameStatus = 'lobby';
@@ -46,6 +46,39 @@ const scoreFields = [ // Array der bruges til at tælle brugte felter til visnin
     'etPar', 'toPar', 'treEns', 'fireEns', 'lilleStraight',
     'storeStraight', 'fuldtHus', 'chance', 'yatzy'
 ];
+
+//Gemmer stien til filen med gemte spillere. Smart fordi vi kan gemme det i projektet
+let savedPlayersPath = path.join(projectRoot,'savedPlayers.json')
+//Opretter filen hvis den ikke findes '[]' fordi vi gerne vil gemme en samling af json objecter.
+//Vi bruger ikke Sync ved writefile og readfile, da de ikke bruges med det samme.
+if (!fs.existsSync(savedPlayersPath)) {
+    fs.writeFile(savedPlayersPath, '[]', 'utf8');
+}
+let savedPlayers = JSON.parse(
+    fs.readFile(savedPlayersPath, 'utf8')
+);
+
+// gemmer spilleren til JSON-filen. Overwriter hvis spilleren allerede findes.
+function savePlayer(player){
+    if (player.name == ){
+
+    }
+    for (savedPlayer in savedPlayers){
+        if (player.name == savedPlayer.name){
+            savedPlayer.highscore = player.highscore;
+            savedPlayer.wins = player.wins;
+            fs.writeFile(savedPlayersPath,JSON.stringify(savedPlayers,null,2),'utf-8');
+            return;
+        }
+    }
+    const newPlayer = {
+        "name" : player.name,
+        "highscore" : player.highscore,
+        "wins" : player.wins
+    };
+    savedPlayers.push(newPlayer);
+    fs.writeFile(savedPlayersPath,JSON.stringify(savedPlayers,null,2),'utf-8');
+}
 
 // returnerer et scoreboard til visning på forsiden
 function getScoreboard() {
@@ -211,6 +244,10 @@ app.post('/newRound', (request, response) => {
         message: "Runde nulstillet på serveren"
     });
 });
+
+function savePlayersToJson(){
+    
+}
 
 app.post('/newGame', (request, response) => {
     let winner;
