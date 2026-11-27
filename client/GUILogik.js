@@ -110,7 +110,7 @@ async function put(url, objekt) {
 async function checkGameStatus() {
     const response = await fetch('/api/game/status');
     const game = await response.json();
-    if (game.status = 'lobby') {
+    if (game.status == 'lobby') {
         window.location.href = "/"
     }
 }
