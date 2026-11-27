@@ -275,6 +275,7 @@ app.post('/newGame', (request, response) => {
     if (winner != null) {
         winner.wins += 1;
     }
+    gameStatus = 'lobby'
     response.status(201).json({
         message: "Nyt spil startet på serveren"
     });
