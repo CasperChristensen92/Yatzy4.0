@@ -64,11 +64,11 @@ html(lang="da")
                                 th Point
                                 th Wins
                         tbody#highscore-body 
-                            //- each player in allPlayers
-                            //-     tr 
-                            //-         td= player.name 
-                            //-         td= player.total 
-                            //-         td= player.wins
+                            each player in allPlayers.sort((a, b) => b.wins - a.wins)
+                                tr 
+                                    td= player.name 
+                                    td= player.highscore
+                                    td= player.wins
 
 
             

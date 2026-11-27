@@ -110,7 +110,8 @@ app.get('/', (request, response) => {
     response.render('forside', {
         status: gameStatus,
         players: getScoreboard(), // Pug får listen af spillere
-        currentPlayer: players.get(request.sessionID)?.name ?? null // Henter navn på aktuel spiller, fra spillerens session, hvis den allerede findes
+        currentPlayer: players.get(request.sessionID)?.name ?? null, // Henter navn på aktuel spiller, fra spillerens session, hvis den allerede findes
+        allPlayers : savedPlayers
     });
 
 });
